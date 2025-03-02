@@ -1,8 +1,18 @@
+-- должности
+create table positions
+(
+    id    serial primary key,
+    title varchar(50) unique not null
+);
+
 -- сотрудники
 create table employees
 (
     id                 serial primary key,
     full_name          varchar(100) not null,
+    gender             varchar      not null check (gender in ('мужской', 'женский')),
+    hire_date          date         not null,
+    birth_date         date         not null,
     position_id        int          not null references positions (id) on delete restrict,
     salary             numeric(10, 2) check (salary >= 0),
     contact_info       text,
@@ -34,20 +44,11 @@ create table administrators
     department varchar(100) not null
 );
 
--- должности
-create table positions
+-- типы питания
+create table diet_types
 (
-    id    serial primary key,
-    title varchar(50) unique not null
-);
-
--- животные
-create table animals
-(
-    id             serial primary key,
-    nickname       varchar(50) not null,
-    animal_type_id int         not null references animal_types (id) on delete cascade,
-    cage_id        int         references cages (id) on delete set null
+    id   serial primary key,
+    type varchar(50) unique not null check (type in ('хищник', 'травоядное', 'всеядное'))
 );
 
 -- виды животных
@@ -56,21 +57,6 @@ create table animal_types
     id           serial primary key,
     type         varchar(100) not null unique,
     diet_type_id int          not null references diet_types (id) on delete cascade
-);
-
--- сотрудники - виды животных (многие-ко-многим)
-create table employees_animal_types
-(
-    employee_id    int not null references employees (id) on delete cascade,
-    animal_type_id int not null references animal_types (id) on delete cascade,
-    primary key (employee_id, animal_type_id)
-);
-
--- типы питания
-create table diet_types
-(
-    id   serial primary key,
-    type varchar(50) check (type in ('хищник', 'травоядное', 'всеядное'))
 );
 
 -- клетки
@@ -83,12 +69,49 @@ create table cages
     max_num      int check (max_num > 0)
 );
 
+-- животные
+create table animals
+(
+    id                 serial primary key,
+    nickname           varchar(50) not null,
+    gender             varchar     not null check (gender in ('мужской', 'женский')),
+    arrival_date       date        not null,
+    needs_warm_housing boolean default false,
+    animal_type_id     int         not null references animal_types (id) on delete cascade,
+    cage_id            int         references cages (id) on delete set null
+);
+
+-- сотрудники - виды животных (многие-ко-многим)
+create table employees_animal_types
+(
+    employee_id    int not null references employees (id) on delete cascade,
+    animal_type_id int not null references animal_types (id) on delete cascade,
+    primary key (employee_id, animal_type_id)
+);
+
 -- сотрудники - клетки (многие-ко-многим)
 create table employees_cages_access
 (
     employee_id int not null references employees (id) on delete cascade,
     cage_id     int not null references cages (id) on delete cascade,
     primary key (employee_id, cage_id)
+);
+
+
+-- типы еды
+create table food_types
+(
+    id   serial primary key,
+    type varchar(50) unique not null
+);
+
+-- еда
+create table food
+(
+    id                     serial primary key,
+    name                   varchar(100) unique not null,
+    food_type_id           int                 not null references food_types (id) on delete cascade,
+    is_produced_internally boolean default false
 );
 
 -- рацион животных
@@ -99,21 +122,6 @@ create table rations
     food_id      int  not null references food (id) on delete cascade,
     amount       numeric(6, 2) check (amount > 0),
     feeding_time time not null
-);
-
--- еда
-create table food
-(
-    id           serial primary key,
-    name         varchar(100) unique not null,
-    food_type_id int                 not null references food_types (id) on delete cascade
-);
-
--- типы еды
-create table food_types
-(
-    id   serial primary key,
-    type varchar(50) unique not null
 );
 
 -- поставщики еды
@@ -132,13 +140,22 @@ create table supplier_food
     food_id     int not null references food (id) on delete cascade
 );
 
+-- зоопарки
+create table zoos
+(
+    id       serial primary key,
+    name     varchar(100) unique not null,
+    address  text,
+    contacts text
+);
+
 -- перемещения животных
 create table transfers
 (
     id            serial primary key,
     animal_id     int          not null references animals (id) on delete cascade,
     reason        text         not null,
-    destination   varchar(100) not null,
+    destination_zoo_id int references zoos(id) on delete set null,
     transfer_date date         not null
 );
 
@@ -172,4 +189,25 @@ create table birth_records
     parent_id_2 int  references animals (id) on delete set null,
     birth_date  date not null,
     status      varchar(50) check (status in ('оставлен', 'обменен', 'отдан'))
+);
+
+-- история перемещений по клеткам
+create table animal_cage_history
+(
+    id         serial primary key,
+    animal_id  int  not null references animals (id) on delete cascade,
+    cage_id    int  not null references cages (id) on delete cascade,
+    start_date date not null,
+    end_date   date
+);
+
+-- информацию о каждой поставке
+create table supply_history
+(
+    id            serial primary key,
+    supplier_id   int  not null references suppliers (id) on delete cascade,
+    food_id       int  not null references food (id) on delete cascade,
+    delivery_date date not null,
+    quantity      numeric(10, 2) check (quantity > 0),
+    price         numeric(10, 2) check (price >= 0)
 );
