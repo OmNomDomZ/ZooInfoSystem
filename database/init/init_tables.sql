@@ -152,11 +152,11 @@ create table zoos
 -- перемещения животных
 create table transfers
 (
-    id            serial primary key,
-    animal_id     int          not null references animals (id) on delete cascade,
-    reason        text         not null,
-    destination_zoo_id int references zoos(id) on delete set null,
-    transfer_date date         not null
+    id                 serial primary key,
+    animal_id          int  not null references animals (id) on delete cascade,
+    reason             text not null,
+    destination_zoo_id int  references zoos (id) on delete set null,
+    transfer_date      date not null
 );
 
 -- медицинские записи
@@ -175,9 +175,9 @@ create table medical_records
 -- совместимости животных
 create table compatibility
 (
-    animal_type_id_1 int     not null references animal_types (id) on delete cascade,
-    animal_type_id_2 int     not null references animal_types (id) on delete cascade,
-    compatible       boolean not null,
+    animal_type_id_1 int not null references animal_types (id) on delete cascade,
+    animal_type_id_2 int not null references animal_types (id) on delete cascade,
+    compatible       boolean,
     primary key (animal_type_id_1, animal_type_id_2)
 );
 

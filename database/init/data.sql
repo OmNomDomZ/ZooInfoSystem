@@ -170,7 +170,15 @@ values ((select id from animals where nickname = 'Симба'), 3, 180.5, 1.10, 
 -- История перемещений
 insert into animal_cage_history (animal_id, cage_id, start_date)
 values ((select id from animals where nickname = 'Симба'), 1, '2022-05-10'),
-       ((select id from animals where nickname = 'Тигра'), 1, '2022-09-22');
+       ((select id from animals where nickname = 'Дамбо'), 2, '2021-09-15'),
+       ((select id from animals where nickname = 'Миша'), 3, '2020-12-20'),
+       ((select id from animals where nickname = 'Альфа'), 4, '2023-01-05'),
+       ((select id from animals where nickname = 'Жорик'), 5, '2022-07-30'),
+       ((select id from animals where nickname = 'Тигра'), 1, '2022-09-22'),
+       ((select id from animals where nickname = 'Балу'), 3, '2020-05-19'),
+       ((select id from animals where nickname = 'Луна'), 4, '2021-11-30'),
+       ((select id from animals where nickname = 'Гром'), 5, '2023-03-17'),
+       ((select id from animals where nickname = 'Тайсон'), 1, '2023-06-21');
 
 -- Записи о рождении
 insert into birth_records (parent_id_1, parent_id_2, birth_date, status)
@@ -179,12 +187,16 @@ values ((select id from animals where nickname = 'Симба'),
         '2023-01-10',
         'оставлен');
 
--- Совместимость
-insert into compatibility (animal_type_id_1, animal_type_id_2, compatible)
-values ((select id from animal_types where type = 'Лев'), (select id from animal_types where type = 'Волк'), false),
-       ((select id from animal_types where type = 'Лев'), (select id from animal_types where type = 'Медведь'), false),
-       ((select id from animal_types where type = 'Слон'), (select id from animal_types where type = 'Жираф'), true);
+-- Совместимость заполняется полностью автоматически
 
--- для каждого животного должна быть запись в animal_cage_history
--- нет данных для supplier_food
--- заполнить compatibility попарно
+-- supplier_food
+insert into supplier_food (supplier_id, food_id)
+values ((select id from suppliers where name = 'АгроФуд'), (select id from food where name = 'Мясо говяжье')),
+       ((select id from suppliers where name = 'Зооферма'), (select id from food where name = 'Мясо говяжье')),
+       ((select id from suppliers where name = 'Зооферма'), (select id from food where name = 'Кролики')),
+       ((select id from suppliers where name = 'Ферма Внуково'), (select id from food where name = 'Комбикорм')),
+       ((select id from suppliers where name = 'ЭкоПродукт'), (select id from food where name = 'Овощи')),
+       ((select id from suppliers where name = 'Ферма Внуково'), (select id from food where name = 'Овощи')),
+       ((select id from suppliers where name = 'Зооферма'), (select id from food where name = 'Рыба')),
+       ((select id from suppliers where name = 'Ферма Внуково'), (select id from food where name = 'Зерно')),
+       ((select id from suppliers where name = 'ЭкоПродукт'), (select id from food where name = 'Фрукты'));

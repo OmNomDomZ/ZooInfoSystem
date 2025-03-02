@@ -70,14 +70,12 @@ declare
     diet1 varchar(50);
     diet2 varchar(50);
 begin
-    select dt.type
-    into diet1
+    select dt.type into diet1
     from animal_types at
              join diet_types dt on at.diet_type_id = dt.id
     where at.id = new.animal_type_id_1;
 
-    select dt.type
-    into diet2
+    select dt.type into diet2
     from animal_types at
              join diet_types dt on at.diet_type_id = dt.id
     where at.id = new.animal_type_id_2;
@@ -85,6 +83,11 @@ begin
     if ((diet1 = 'хищник' and diet2 = 'травоядное')
         or (diet1 = 'травоядное' and diet2 = 'хищник')) then
         new.compatible := false;
+    elsif ((diet1 = 'травоядное' and diet2 = 'всеядное')
+        or (diet1 = 'всеядное' and diet2 = 'травоядное')) then
+        new.compatible := false;
+    else
+        new.compatible := true;
     end if;
 
     return new;
@@ -96,6 +99,35 @@ create trigger trg_check_compatibility
     on compatibility
     for each row
 execute procedure check_compatibility();
+
+-- автоматическое заполнение совместимости
+create or replace function auto_fill_compatibility()
+returns trigger as
+$$
+begin
+    delete from compatibility
+     where animal_type_id_1 = new.id
+        or animal_type_id_2 = new.id;
+
+    insert into compatibility (animal_type_id_1, animal_type_id_2, compatible)
+    select new.id, at.id, null
+      from animal_types at
+     where at.id <> new.id;
+
+    insert into compatibility (animal_type_id_1, animal_type_id_2, compatible)
+    select at.id, new.id, null
+      from animal_types at
+     where at.id <> new.id;
+
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_auto_fill_compatibility
+after insert or update
+on animal_types
+for each row
+execute procedure auto_fill_compatibility();
 
 -- Автоматическое создание записи о новорожденном
 create or replace function auto_create_offspring()
