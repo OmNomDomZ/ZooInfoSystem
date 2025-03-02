@@ -23,7 +23,7 @@ create table employees
 create table vets
 (
     id             int primary key references employees (id) on delete cascade,
-    license_number varchar(50) unique not null
+    license_number decimal(8, 0) unique not null
 );
 
 create table keeper

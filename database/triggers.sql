@@ -12,7 +12,7 @@ begin
 
     if pos_title = 'ветеринар' then
         insert into vets (id, license_number)
-        values (new.id, 'default_license');
+        values (new.id, (random() * 100000000) :: int);
     elsif pos_title = 'смотритель' then
         insert into keeper (id)
         values (new.id);
@@ -44,7 +44,8 @@ begin
     if new.cage_id is distinct from old.cage_id then
         update animal_cage_history
         set end_date = current_date
-        where animal_id = old.id and end_date is null;
+        where animal_id = old.id
+          and end_date is null;
 
         if new.cage_id is not null then
             insert into animal_cage_history(animal_id, cage_id, start_date, end_date)
@@ -56,6 +57,86 @@ end;
 $$ language plpgsql;
 
 create trigger trg_update_animal_cage_history
-after update of cage_id on animals
-for each row
+    after update of cage_id
+    on animals
+    for each row
 execute procedure update_animal_cage_history();
+
+-- автоматическая проверка совместимости
+create or replace function check_compatibility()
+    returns trigger as
+$$
+declare
+    diet1 varchar(50);
+    diet2 varchar(50);
+begin
+    select dt.type
+    into diet1
+    from animal_types at
+             join diet_types dt on at.diet_type_id = dt.id
+    where at.id = new.animal_type_id_1;
+
+    select dt.type
+    into diet2
+    from animal_types at
+             join diet_types dt on at.diet_type_id = dt.id
+    where at.id = new.animal_type_id_2;
+
+    if ((diet1 = 'хищник' and diet2 = 'травоядное')
+        or (diet1 = 'травоядное' and diet2 = 'хищник')) then
+        new.compatible := false;
+    end if;
+
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_check_compatibility
+    before insert or update
+    on compatibility
+    for each row
+execute procedure check_compatibility();
+
+-- Автоматическое создание записи о новорожденном
+create or replace function auto_create_offspring()
+    returns trigger as
+$$
+declare
+    parent_type   int;
+    parent_cage int;
+    new_animal_id int;
+    random_gender varchar;
+begin
+    if new.parent_id_1 is not null then
+        select animal_type_id, cage_id
+        into parent_type, parent_cage
+        from animals
+        where id = new.parent_id_1;
+
+        if random() > 0.5 then
+            random_gender := 'мужской';
+        else
+            random_gender := 'женский';
+        end if;
+
+        insert into animals (nickname, gender, arrival_date, needs_warm_housing, animal_type_id, cage_id)
+        values ('Детёныш ' || new.id,
+                random_gender,
+                new.birth_date,
+                false,
+                parent_type,
+                parent_cage)
+        returning id into new_animal_id;
+
+    else
+        raise notice 'Не указан parent_id_1, не создаём животное';
+    end if;
+
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_auto_create_offspring
+after insert on birth_records
+for each row
+execute procedure auto_create_offspring();
