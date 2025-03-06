@@ -110,7 +110,7 @@ values ('АгроФуд', '+7 495 555-12-34'),
        ('ЭкоПродукт', '+7 903 456-78-90');
 
 -- История поставок
-insert into supply_history (supplier_id, food_id, delivery_date, quantity, price)
+insert into suppliers_food (supplier_id, food_id, delivery_date, quantity, price)
 values ((select id from suppliers where name = 'АгроФуд'), (select id from food where name = 'Мясо говяжье'),
         '2024-02-15', 200.0, 50000),
        ((select id from suppliers where name = 'Зооферма'), (select id from food where name = 'Кролики'), '2024-02-20',
@@ -189,6 +189,7 @@ values ((select id from animals where nickname = 'Симба'),
 
 -- Совместимость заполняется полностью автоматически
 
+-- TODO: добавить эти данные в сущность suppliers_food
 -- supplier_food
 insert into supplier_food (supplier_id, food_id)
 values ((select id from suppliers where name = 'АгроФуд'), (select id from food where name = 'Мясо говяжье')),
@@ -200,3 +201,6 @@ values ((select id from suppliers where name = 'АгроФуд'), (select id fro
        ((select id from suppliers where name = 'Зооферма'), (select id from food where name = 'Рыба')),
        ((select id from suppliers where name = 'Ферма Внуково'), (select id from food where name = 'Зерно')),
        ((select id from suppliers where name = 'ЭкоПродукт'), (select id from food where name = 'Фрукты'));
+
+-- TODO: добавить больше данных
+--  (для каждого животного должна быть минимум одна запись в medical_record, animal_cage_history и тд)

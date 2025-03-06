@@ -133,11 +133,14 @@ create table suppliers
 );
 
 -- поставщики -- еда (многие-ко-многим)
-create table supplier_food
+create table suppliers_food
 (
-    id          serial primary key,
-    supplier_id int not null references suppliers (id) on delete cascade,
-    food_id     int not null references food (id) on delete cascade
+    id            serial primary key,
+    supplier_id   int  not null references suppliers (id) on delete cascade,
+    food_id       int  not null references food (id) on delete cascade,
+    delivery_date date not null,
+    quantity      numeric(10, 2) check (quantity > 0),
+    price         numeric(10, 2) check (price >= 0)
 );
 
 -- зоопарки
@@ -199,15 +202,4 @@ create table animal_cage_history
     cage_id    int  not null references cages (id) on delete cascade,
     start_date date not null,
     end_date   date
-);
-
--- информацию о каждой поставке
-create table supply_history
-(
-    id            serial primary key,
-    supplier_id   int  not null references suppliers (id) on delete cascade,
-    food_id       int  not null references food (id) on delete cascade,
-    delivery_date date not null,
-    quantity      numeric(10, 2) check (quantity > 0),
-    price         numeric(10, 2) check (price >= 0)
 );
