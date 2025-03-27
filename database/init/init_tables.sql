@@ -167,21 +167,12 @@ create table medical_records
 (
     id           serial primary key,
     animal_id    int  not null references animals (id) on delete cascade,
-    age          int check (age >= 0),
+    birth_date   date not null,
     weight       numeric(6, 2) check (weight > 0),
     height       numeric(6, 2) check (height > 0),
     vaccinations text,
     illnesses    text,
     checkup_date date not null
-);
-
--- совместимости животных
-create table compatibility
-(
-    animal_type_id_1 int not null references animal_types (id) on delete cascade,
-    animal_type_id_2 int not null references animal_types (id) on delete cascade,
-    compatible       boolean,
-    primary key (animal_type_id_1, animal_type_id_2)
 );
 
 -- записи о рождении

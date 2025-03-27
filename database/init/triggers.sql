@@ -1,3 +1,4 @@
+-- TODO: скорее всего понадобятся еще скрипты, при добавлении и обновлении чего-то
 -- автоматическое создание работников в дочерних таблицах
 create or replace function auto_create_child_record()
     returns trigger as
@@ -67,27 +68,57 @@ create or replace function check_compatibility()
     returns trigger as
 $$
 declare
-    diet1 varchar(50);
-    diet2 varchar(50);
+    diet           varchar(50);
+    neighbor_diet1 varchar(50);
+    neighbor_diet2 varchar(50);
+
 begin
-    select dt.type into diet1
-    from animal_types at
-             join diet_types dt on at.diet_type_id = dt.id
-    where at.id = new.animal_type_id_1;
+    if new.cage_id is distinct from old.cage_id then
+        select dt.type
+        into diet
+        from animal_types at
+                 join diet_types dt on dt.id = at.diet_type_id
+        where at.id = new.animal_type_id;
 
-    select dt.type into diet2
-    from animal_types at
-             join diet_types dt on at.diet_type_id = dt.id
-    where at.id = new.animal_type_id_2;
+        select dt.type
+        into neighbor_diet1
+        from animals a
+                 join animal_types at on a.animal_type_id = at.id
+                 join diet_types dt on dt.id = at.diet_type_id
+        where a.id = new.cage_id - 1
+        limit 1;
 
-    if ((diet1 = 'хищник' and diet2 = 'травоядное')
-        or (diet1 = 'травоядное' and diet2 = 'хищник')) then
-        new.compatible := false;
-    elsif ((diet1 = 'травоядное' and diet2 = 'всеядное')
-        or (diet1 = 'всеядное' and diet2 = 'травоядное')) then
-        new.compatible := false;
-    else
-        new.compatible := true;
+        select dt.type
+        into neighbor_diet2
+        from animals a
+                 join animal_types at on a.animal_type_id = at.id
+                 join diet_types dt on dt.id = at.diet_type_id
+        where a.id = new.cage_id + 1
+        limit 1;
+
+
+        if neighbor_diet1 is not null then
+            if (diet = 'хищник' and neighbor_diet1 = 'травоядное') or
+               (diet = 'травоядное' and neighbor_diet1 = 'хищник')
+            then
+                new.cage_id := old.cage_id;
+                raise notice 'Несовместимость с животными (%) в соседней клетке (CAGE %). Животное возвращено в клетку %',
+                    neighbor_diet1, new.cage_id - 1, OLD.cage_id;
+                return new;
+            end if;
+        end if;
+
+        if neighbor_diet2 is not null then
+            if (diet = 'хищник' and neighbor_diet2 = 'травоядное') or
+               (diet = 'травоядное' and neighbor_diet2 = 'хищник')
+            then
+                new.cage_id := old.cage_id;
+                raise notice 'Несовместимость с животными (%) в соседней клетке (CAGE %). Животное возвращено в клетку %',
+                    neighbor_diet2, new.cage_id + 1, OLD.cage_id;
+                return new;
+            end if;
+        end if;
+
     end if;
 
     return new;
@@ -95,39 +126,10 @@ end;
 $$ language plpgsql;
 
 create trigger trg_check_compatibility
-    before insert or update
-    on compatibility
+    before update
+    on animals
     for each row
 execute procedure check_compatibility();
-
--- автоматическое заполнение совместимости
-create or replace function auto_fill_compatibility()
-returns trigger as
-$$
-begin
-    delete from compatibility
-     where animal_type_id_1 = new.id
-        or animal_type_id_2 = new.id;
-
-    insert into compatibility (animal_type_id_1, animal_type_id_2, compatible)
-    select new.id, at.id, null
-      from animal_types at
-     where at.id <> new.id;
-
-    insert into compatibility (animal_type_id_1, animal_type_id_2, compatible)
-    select at.id, new.id, null
-      from animal_types at
-     where at.id <> new.id;
-
-    return new;
-end;
-$$ language plpgsql;
-
-create trigger trg_auto_fill_compatibility
-after insert or update
-on animal_types
-for each row
-execute procedure auto_fill_compatibility();
 
 -- Автоматическое создание записи о новорожденном
 create or replace function auto_create_offspring()
@@ -135,7 +137,7 @@ create or replace function auto_create_offspring()
 $$
 declare
     parent_type   int;
-    parent_cage int;
+    parent_cage   int;
     new_animal_id int;
     random_gender varchar;
 begin
@@ -169,6 +171,7 @@ end;
 $$ language plpgsql;
 
 create trigger trg_auto_create_offspring
-after insert on birth_records
-for each row
+    after insert
+    on birth_records
+    for each row
 execute procedure auto_create_offspring();
