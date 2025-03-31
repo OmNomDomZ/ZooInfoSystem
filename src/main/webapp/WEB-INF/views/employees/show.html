@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee</title>
+</head>
+<body>
+<p th:text="'Full name: ' + ${employee.getFull_name()}"></p>
+<p th:text="'Gender: ' + ${employee.getGender()}"></p>
+<p th:text="'Hire date: ' + ${employee.getHire_date()}"></p>
+<p th:text="'Birht date: ' + ${employee.getBirth_date()}"></p>
+<p th:text="'Position: ' + ${employee.getPosition_id()}"></p>
+<p th:text="'Salary: ' + ${employee.getSalary()}"></p>
+<p th:text="'Contact Info: ' + ${employee.getContact_info()}"></p>
+<p th:text="'Special attributes: ' + ${employee.getSpecialAttributes()}"></p>
+
+<a th:href="@{/employees/{id}/edit(id=${employee.getId()})}">Edit</a>
+
+<form th:method="DELETE" th:action="@{/employees/{id}(id=${employee.getId()})}">
+    <input type="submit" value="Delete!">
+</form>
+
+</body>
+</html>
