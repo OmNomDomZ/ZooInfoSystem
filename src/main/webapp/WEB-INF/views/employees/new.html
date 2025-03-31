@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New person</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/employees}" th:object="${employee}">
+
+    <label for="full_name">Full name:</label>
+    <input type="text" th:field="*{full_name}" id="full_name"/>
+    <div style = "color:red" th:if="${#fields.hasErrors('full_name')}" th:errors="*{full_name}"></div>
+    <br/>
+
+    <label for="gender">Gender:</label>
+    <select th:field="*{gender}" id="gender">
+        <option value="мужской">мужской</option>
+        <option value="женский">женский</option>
+    </select>
+    <div style = "color:red" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
+    <br/>
+
+    <label for="birth_date">Birth date:</label>
+    <input type="date" th:field="*{birth_date}" id="birth_date"/>
+    <div style = "color:red" th:if="${#fields.hasErrors('birth_date')}" th:errors="*{birth_date}"></div>
+    <br/>
+
+    <label for="hire_date">Hire date:</label>
+    <input type="date" th:field="*{hire_date}" id="hire_date"/>
+    <div style = "color:red" th:if="${#fields.hasErrors('hire_date')}" th:errors="*{hire_date}"></div>
+    <br/>
+
+    <label for="position_id">Position ID:</label>
+    <input type="number" th:field="*{position_id}" id="position_id"/>
+    <div style = "color:red" th:if="${#fields.hasErrors('position_id')}" th:errors="*{position_id}"></div>
+    <br/>
+
+    <label for="salary">Salary:</label>
+    <input type="number" step="1" th:field="*{salary}" id="salary"/>
+    <div style = "color:red" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></div>
+    <br/>
+
+    <label for="contact_info">Contact (email or phone):</label>
+    <input type="text" th:field="*{contact_info}" id="contact_info"/>
+    <div th:if="${#fields.hasErrors('contact_info')}" th:errors="*{contact_info}"></div>
+    <br/>
+
+    <input type="submit" value="Create!"/>
+</form>
+
+
+</body>
+</html>
