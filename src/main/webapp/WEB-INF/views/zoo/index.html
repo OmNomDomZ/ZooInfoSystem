@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Зоопарк</title>
+    <link rel="stylesheet" th:href="@{/css/zoo_style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Добро пожаловать в Зоопарк</h1>
+</header>
+<main>
+    <div class="button-grid">
+        <!-- Карточка с животными -->
+        <div class="icon-card animal-card">
+            <div class="card-top">
+                <span class="button-icon">🐘</span>
+                <span class="button-text">Животные</span>
+            </div>
+            <a href="/zoo/animals" class="button-link">Подробнее</a>
+        </div>
+
+        <!-- Карточка с сотрудниками -->
+        <div class="icon-card employee-card">
+            <div class="card-top">
+                <span class="button-icon">👥</span>
+                <span class="button-text">Сотрудники</span>
+            </div>
+            <a href="/zoo/employees" class="button-link">Подробнее</a>
+        </div>
+
+        <!-- Карточка с поставщиками -->
+        <div class="icon-card supplier-card">
+            <div class="card-top">
+                <span class="button-icon">🚚</span>
+                <span class="button-text">Поставщики</span>
+            </div>
+            <a href="/zoo/suppliers" class="button-link">Подробнее</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

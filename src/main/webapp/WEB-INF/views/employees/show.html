@@ -1,24 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Employee</title>
+    <title>Детали сотрудника</title>
+    <link rel="stylesheet" th:href="@{/css/employees_style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<p th:text="'Full name: ' + ${employee.getFull_name()}"></p>
-<p th:text="'Gender: ' + ${employee.getGender()}"></p>
-<p th:text="'Hire date: ' + ${employee.getHire_date()}"></p>
-<p th:text="'Birht date: ' + ${employee.getBirth_date()}"></p>
-<p th:text="'Position: ' + ${employee.getPosition_id()}"></p>
-<p th:text="'Salary: ' + ${employee.getSalary()}"></p>
-<p th:text="'Contact Info: ' + ${employee.getContact_info()}"></p>
-<p th:text="'Special attributes: ' + ${employee.getSpecialAttributes()}"></p>
+<header>
+    <h1>Детали сотрудника</h1>
+</header>
+<main>
+    <p th:text="'Полное имя: ' + ${employee.getFullName()}"></p>
+    <p th:text="'Пол: ' + ${employee.getGender()}"></p>
+    <p th:text="'Дата найма: ' + ${employee.getHireDate()}"></p>
+    <p th:text="'Дата рождения: ' + ${employee.getBirthDate()}"></p>
+    <p th:text="'Должность: ' + ${employee.getPositionName()}"></p>
+    <p th:text="'Зарплата: ' + ${employee.getSalary()}"></p>
+    <p th:text="'Контактная информация: ' + ${employee.getContactInfo()}"></p>
+    <p th:text="'Special attributes: ' + ${employee.getSpecialAttributes()}"></p>
 
-<a th:href="@{/employees/{id}/edit(id=${employee.getId()})}">Edit</a>
+    <a th:href="@{/zoo/employees/{id}/edit(id=${employee.getId()})}" class="btn">Редактировать</a>
 
-<form th:method="DELETE" th:action="@{/employees/{id}(id=${employee.getId()})}">
-    <input type="submit" value="Delete!">
-</form>
-
+    <form th:method="DELETE" th:action="@{/zoo/employees/{id}(id=${employee.getId()})}">
+        <input type="submit" value="Удалить!" class="btn">
+    </form>
+</main>
 </body>
 </html>

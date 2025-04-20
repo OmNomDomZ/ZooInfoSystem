@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали поставщика</title>
+    <link rel="stylesheet" th:href="@{/css/suppliers_style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Детали поставщика</h1>
+</header>
+<main>
+    <p th:text="'Название: ' + ${supplier.name}"></p>
+    <p th:text="'Контакты: ' + ${supplier.contacts}"></p>
+
+    <a th:href="@{/zoo/suppliers/{id}/edit(id=${supplier.id})}" class="btn">Редактировать</a>
+    <form th:method="DELETE" th:action="@{/zoo/suppliers/{id}(id=${supplier.id})}">
+        <input type="submit" value="Удалить!" class="btn">
+    </form>
+</main>
+</body>
+</html>

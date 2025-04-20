@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import v.rabetsky.models.Employee;
+import v.rabetsky.models.entities.Employee;
+import v.rabetsky.models.EmployeeFilter;
 
 import java.util.List;
 
@@ -19,29 +20,34 @@ public class EmployeeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Employee> index() {
-        log.info("Employees: show all employees");
-        return jdbcTemplate.query("SELECT * FROM employees", new BeanPropertyRowMapper<>(Employee.class));
+    public List<Employee> findByFilter(EmployeeFilter f) {
+        return jdbcTemplate.query(
+                "SELECT * FROM get_employees(?, ?, ?)",
+                new BeanPropertyRowMapper<>(Employee.class),
+                f.getFullName(),
+                f.getPositionIds(),
+                f.getGenders()
+        );
     }
 
     public Employee show(int id) {
-        List<Employee> employees = jdbcTemplate.query("SELECT * FROM employees WHERE id = ?", new BeanPropertyRowMapper<>(Employee.class), id);
+        Employee employee = jdbcTemplate.queryForObject("SELECT * FROM employees WHERE id = ?", new BeanPropertyRowMapper<>(Employee.class), id);
         log.info("Employees: show employee id={}", id);
-        return employees.stream().findAny().orElse(null);
+        return employee;
     }
 
     public void save(Employee employee) {
         jdbcTemplate.update("INSERT INTO employees (full_name, gender, hire_date, birth_date, position_id, salary, contact_info) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                employee.getFull_name(), employee.getGender(), employee.getHire_date(), employee.getBirth_date(),
-                employee.getPosition_id(), employee.getSalary(), employee.getContact_info());
+                employee.getFullName(), employee.getGender(), employee.getHireDate(), employee.getBirthDate(),
+                employee.getPositionId(), employee.getSalary(), employee.getContactInfo());
         log.info("Employees: add new employee id={}", employee.getId());
     }
 
     public void update(int id, Employee employee) {
         jdbcTemplate.update("UPDATE employees SET full_name=?, gender=?, hire_date=?, birth_date=?, " +
                         "position_id=?, salary=?, contact_info=? WHERE id=?",
-                employee.getFull_name(), employee.getGender(), employee.getHire_date(), employee.getBirth_date(),
-                employee.getPosition_id(), employee.getSalary(), employee.getContact_info(), id);
+                employee.getFullName(), employee.getGender(), employee.getHireDate(), employee.getBirthDate(),
+                employee.getPositionId(), employee.getSalary(), employee.getContactInfo(), id);
         log.info("Employees: edit employee id={}", employee.getId());
     }
 

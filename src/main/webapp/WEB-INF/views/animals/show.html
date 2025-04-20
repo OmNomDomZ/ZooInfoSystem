@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали животного</title>
+    <link rel="stylesheet" th:href="@{/css/animals_style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Детали животного</h1>
+</header>
+<main>
+    <p th:text="'Кличка: ' + ${animal.nickname}"></p>
+    <p th:text="'Пол: ' + ${animal.gender}"></p>
+    <p th:text="'Дата прибытия: ' + ${animal.getArrivalDate}"></p>
+    <p th:text="'Нуждается в теплом жилье: ' + (${animal.needs_warm_housing} ? 'Да' : 'Нет')"></p>
+    <p th:text="'Тип: ' + ${animal.getAnimalTypeName}"></p>
+    <p th:text="'Клетка: ' + ${animal.getCageId}"></p>
+
+    <a th:href="@{/zoo/animals/{id}/edit(id=${animal.id})}" class="btn">Редактировать</a>
+    <form th:method="DELETE" th:action="@{/zoo/animals/{id}(id=${animal.id})}">
+        <input type="submit" value="Удалить!" class="btn">
+    </form>
+</main>
+</body>
+</html>

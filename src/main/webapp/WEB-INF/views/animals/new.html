@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Новое животное</title>
+    <link rel="stylesheet" th:href="@{/css/animals_style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Добавление нового животного</h1>
+</header>
+<main>
+    <form th:action="@{/zoo/animals}" th:object="${animal}" method="post">
+        <label for="nickname">Кличка:</label>
+        <input type="text" th:field="*{nickname}" id="nickname"/>
+        <div style="color:red" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
+
+        <label for="gender">Пол:</label>
+        <select th:field="*{gender}" id="gender">
+            <option value="мужской">мужской</option>
+            <option value="женский">женский</option>
+        </select>
+        <div style="color:red" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
+
+        <label for="arrival_date">Дата прибытия:</label>
+        <input type="date" th:field="*{getArrivalDate}" id="arrival_date"/>
+        <div style="color:red" th:if="${#fields.hasErrors('arrival_date')}" th:errors="*{getArrivalDate}"></div>
+
+        <label for="needs_warm_housing">Нуждается в теплом жилье:</label>
+        <input type="checkbox" th:field="*{needs_warm_housing}" id="needs_warm_housing"/>
+
+        <label for="animal_type_id">ID типа животного:</label>
+        <input type="number" th:field="*{getAnimalTypeId}" id="animal_type_id"/>
+        <div style="color:red" th:if="${#fields.hasErrors('animal_type_id')}" th:errors="*{getAnimalTypeId}"></div>
+
+        <label for="cage_id">ID клетки:</label>
+        <input type="number" th:field="*{getCageId}" id="cage_id"/>
+
+        <input type="submit" value="Добавить" class="btn">
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,98 @@
+/* Базовые стили */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #f4f7f9;
+    color: #333;
+}
+
+header {
+    background: #2d3a4e;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+main {
+    padding: 40px 20px;
+}
+
+/* Сетка для карточек */
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Стили карточек */
+.icon-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    min-height: 200px;
+    color: #fff;
+}
+
+.icon-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.button-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.button-text {
+    font-size: 1.3em;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* Полностью кликабельная ссылка */
+.button-link {
+    display: block;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.button-link:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Индивидуальные цвета карточек */
+.animal-card {
+    background-color: #2196F3;
+}
+
+.employee-card {
+    background-color: #4CAF50;
+}
+
+.supplier-card {
+    background-color: #FF9800;
+}

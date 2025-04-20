@@ -1,0 +1,55 @@
+package v.rabetsky.dao;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+import v.rabetsky.models.entities.Animal;
+
+import java.util.List;
+
+@Slf4j
+@Component
+public class AnimalDAO {
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public AnimalDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<Animal> index() {
+        log.info("Animals: получение списка животных");
+        List<Animal> animals = jdbcTemplate.query("SELECT * FROM animals", new BeanPropertyRowMapper<>(Animal.class));
+        return animals;
+    }
+
+    public Animal show(int id) {
+        Animal animal = jdbcTemplate.queryForObject("SELECT * FROM animals WHERE id = ?",
+                new BeanPropertyRowMapper<>(Animal.class), id);
+        log.info("Animals: показ животного id={}", id);
+        return animal;
+    }
+
+    public void save(Animal animal) {
+        jdbcTemplate.update(
+                "INSERT INTO animals (nickname, gender, arrival_date, needs_warm_housing, animal_type_id, cage_id) VALUES (?, ?, ?, ?, ?, ?)",
+                animal.getNickname(), animal.getGender(), animal.getArrivalDate(), animal.isNeeds_warm_housing(), animal.getAnimalTypeId(), animal.getCageId()
+        );
+        log.info("Animals: добавлено новое животное");
+    }
+
+    public void update(int id, Animal animal) {
+        jdbcTemplate.update(
+                "UPDATE animals SET nickname = ?, gender = ?, arrival_date = ?, needs_warm_housing = ?, animal_type_id = ?, cage_id = ? WHERE id = ?",
+                animal.getNickname(), animal.getGender(), animal.getArrivalDate(), animal.isNeeds_warm_housing(), animal.getAnimalTypeId(), animal.getCageId(), id
+        );
+        log.info("Animals: обновлено животное id={}", id);
+    }
+
+    public void delete(int id) {
+        jdbcTemplate.update("DELETE FROM animals WHERE id = ?", id);
+        log.info("Animals: удалено животное id={}", id);
+    }
+}

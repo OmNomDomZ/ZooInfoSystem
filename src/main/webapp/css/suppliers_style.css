@@ -1,0 +1,83 @@
+/* suppliers.css */
+
+/* Базовые стили */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #f4f7f9;
+    color: #333;
+}
+
+header {
+    background: #2d3a4e;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+main {
+    padding: 40px 20px;
+}
+
+/* Контейнер для списка поставщиков */
+.employee-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Стили карточек поставщиков (используются те же классы, что и для сотрудников) */
+.employee-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.employee-card:hover {
+    background-color: #f9f9f9;
+}
+
+/* Стили ссылок поставщиков */
+.employee-link {
+    text-decoration: none;
+    color: #2d3a4e;
+    font-size: 1.1em;
+}
+
+.employee-link:hover {
+    text-decoration: underline;
+}
+
+/* Контейнер для кнопки добавления */
+.add-new {
+    max-width: 800px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* Стили кнопки */
+.btn {
+    display: inline-block;
+    background-color: #2d3a4e;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #1c2533;
+}

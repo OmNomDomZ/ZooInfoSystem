@@ -5,31 +5,49 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import v.rabetsky.dao.EmployeeDAO;
-import v.rabetsky.models.Employee;
+import v.rabetsky.dao.PositionDAO;
+import v.rabetsky.dto.EmployeeDTO;
+import v.rabetsky.models.entities.Employee;
+import v.rabetsky.models.EmployeeFilter;
+import v.rabetsky.models.entities.Position;
+import v.rabetsky.services.EmployeeService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
-@RequestMapping("/employees")
+@RequestMapping("/zoo/employees")
 public class EmployeesController {
 
-    private final EmployeeDAO employeeDAO;
+    private final EmployeeService employeeService;
+    private final PositionDAO positionDAO;
 
     @Autowired
-    public EmployeesController(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public EmployeesController(EmployeeService employeeService,
+                               PositionDAO positionDAO) {
+        this.employeeService = employeeService;
+        this.positionDAO     = positionDAO;
+    }
+
+    @ModelAttribute("positionsList")
+    public List<Position> populatePositions() {
+        return positionDAO.findAll();
     }
 
     @GetMapping("")
-    public String index(Model model) {
-        model.addAttribute("employees", employeeDAO.index());
+    public String index(EmployeeFilter filter, Model model) {
+        model.addAttribute("filter", filter);
+
+        List<EmployeeDTO> employees = employeeService.findAllWithPositionName(filter);
+        model.addAttribute("employees", employees);
+
         return "employees/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("employee", employeeDAO.show(id));
+        EmployeeDTO dto = employeeService.findById(id);
+        model.addAttribute("employee", dto);
         return "employees/show";
     }
 
@@ -46,13 +64,13 @@ public class EmployeesController {
             return "employees/new";
         }
 
-        employeeDAO.save(employee);
-        return "redirect:/employees";
+        employeeService.save(employee);
+        return "redirect:/zoo/employees";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        model.addAttribute("employee", employeeDAO.show(id));
+        model.addAttribute("employee", employeeService.show(id));
         return "employees/edit";
     }
 
@@ -64,13 +82,13 @@ public class EmployeesController {
             return "employees/edit";
         }
 
-        employeeDAO.update(id, employee);
-        return "redirect:/employees";
+        employeeService.update(id, employee);
+        return "redirect:/zoo/employees";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        employeeDAO.delete(id);
-        return "redirect:/employees";
+        employeeService.delete(id);
+        return "redirect:/zoo/employees";
     }
 }

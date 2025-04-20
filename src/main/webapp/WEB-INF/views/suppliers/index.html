@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список поставщиков</title>
+    <link rel="stylesheet" th:href="@{/css/suppliers_style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Список поставщиков</h1>
+</header>
+<main>
+    <div class="employee-list">
+        <div class="employee-card" th:each="supplier : ${suppliers}">
+            <a class="employee-link" th:href="@{/zoo/suppliers/{id}(id=${supplier.id})}"
+               th:text="${supplier.name}">
+                Название поставщика
+            </a>
+        </div>
+    </div>
+    <div class="add-new">
+        <a th:href="@{/zoo/suppliers/new}" class="btn">Добавить нового поставщика</a>
+    </div>
+</main>
+</body>
+</html>

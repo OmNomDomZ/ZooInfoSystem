@@ -1,19 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <title>Список сотрудников</title>
+    <link rel="stylesheet" th:href="@{/css/employees_style.css}">
 </head>
 <body>
-<div th:each="employee : ${employees}">
-    <a th:href="@{/employees/{id}(id=${employee.getId()})}"
-       th:text="${employee.getFull_name()} + ',' + ${employee.getPosition_id()}">employee</a>
-</div>
+<header><h1>Список сотрудников</h1></header>
+<main>
+    <form class="filter-bar" method="get" th:object="${filter}">
+        <h2>Фильтры</h2>
 
-<br/>
-<hr/>
+        <label for="fullName">ФИО</label>
+        <input id="fullName" type="text" th:field="*{fullName}" placeholder="Часть имени"/>
 
-<a th:href = "@{/employees/new}">Create new person</a>
+        <label for="position">Должность</label>
+        <select id="position" th:field="*{positionIds}">
+            <option value="" selected>— Все —</option>
+            <option th:each="pos : ${positionsList}"
+                    th:value="${pos.id}"
+                    th:text="${pos.title}">
+            </option>
+        </select>
 
+        <label for="gender">Пол</label>
+        <select id="gender" th:field="*{genders}">
+            <option value="" selected>— Все —</option>
+            <option value="мужской">мужской</option>
+            <option value="женский">женский</option>
+        </select>
+
+        <div class="filter-buttons">
+            <button type="submit" class="btn">Применить</button>
+            <a th:href="@{/zoo/employees}" class="btn">Сброс</a>
+        </div>
+    </form>
+
+    <div class="employee-list">
+        <div class="employee-card" th:each="emp : ${employees}">
+            <a class="employee-link"
+               th:href="@{/zoo/employees/{id}(id=${emp.id})}"
+               th:text="${emp.fullName} + ', ' + ${emp.positionName}">
+                ФИО, должность
+            </a>
+        </div>
+        <div class="add-new">
+            <a th:href="@{/zoo/employees/new}" class="btn">Добавить новую запись</a>
+        </div>
+    </div>
+</main>
 </body>
 </html>

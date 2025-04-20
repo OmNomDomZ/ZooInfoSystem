@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Животные</title>
+    <link rel="stylesheet" th:href="@{/css/animals_style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Список животных</h1>
+</header>
+<main>
+    <div class="animal-list">
+        <div class="employee-card" th:each="animal : ${animals}">
+            <a class="employee-link" th:href="@{/zoo/animals/{id}(id=${animal.id})}"
+               th:text="${animal.nickname} + ' (' + animal.animal_type_name + ')'">
+                Название животного
+            </a>
+        </div>
+    </div>
+    <div class="add-new">
+        <a th:href="@{/zoo/animals/new}" class="btn">Добавить новое животное</a>
+    </div>
+</main>
+</body>
+</html>

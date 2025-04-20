@@ -1,0 +1,89 @@
+/* animals.css */
+
+/* Базовые стили */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #f4f7f9;
+    color: #333;
+}
+
+header {
+    background: #2d3a4e;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+main {
+    padding: 40px 20px;
+}
+
+/* Контейнер для списка животных */
+.animal-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Здесь HTML использует класс employee-card для каждого животного */
+.employee-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.employee-card:hover {
+    background-color: #f9f9f9;
+}
+
+/* Ссылка для животного – сделаем её блочной, чтобы кликабельна была вся область */
+.employee-link {
+    display: block;
+    text-decoration: none;
+    color: #2d3a4e;
+    font-size: 1.1em;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.employee-link:hover {
+    background-color: #eaeaea;
+}
+
+/* Контейнер для кнопки добавления */
+.add-new {
+    max-width: 800px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* Стили для кнопки – немного меньше по размеру */
+.btn {
+    display: inline-block;
+    background-color: #2d3a4e;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #1c2533;
+}
