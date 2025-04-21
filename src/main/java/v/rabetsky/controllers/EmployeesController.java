@@ -46,8 +46,7 @@ public class EmployeesController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        EmployeeDTO dto = employeeService.findById(id);
-        model.addAttribute("employee", dto);
+        model.addAttribute("employee", employeeService.findById(id));
         return "employees/show";
     }
 
@@ -70,7 +69,7 @@ public class EmployeesController {
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        model.addAttribute("employee", employeeService.show(id));
+        model.addAttribute("employee", employeeService.findById(id));
         return "employees/edit";
     }
 

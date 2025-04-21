@@ -28,7 +28,7 @@ public class Animal {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate arrivalDate;
 
-    private boolean needs_warm_housing;
+    private boolean needsWarmHousing;
 
     @NotNull(message = "ID типа животного обязателен")
     private Integer animalTypeId;

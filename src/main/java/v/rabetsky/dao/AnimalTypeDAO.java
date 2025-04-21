@@ -3,22 +3,22 @@ package v.rabetsky.dao;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import v.rabetsky.models.entities.Position;
+import v.rabetsky.models.entities.AnimalType;
 
 import java.util.List;
 
 @Component
-public class PositionDAO {
+public class AnimalTypeDAO {
     private final JdbcTemplate jdbcTemplate;
 
-    public PositionDAO(JdbcTemplate jdbcTemplate) {
+    public AnimalTypeDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Position> findAll() {
+    public List<AnimalType> findAll() {
         return jdbcTemplate.query(
-                "SELECT * FROM positions",
-                new BeanPropertyRowMapper<>(Position.class)
+                "SELECT * FROM animal_types",
+                new BeanPropertyRowMapper<>(AnimalType.class)
         );
     }
 }

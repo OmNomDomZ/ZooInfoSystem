@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AnimalType {
+public class DietType {
     private int id;
     private String type;
-    private int dietTypeId;
 }

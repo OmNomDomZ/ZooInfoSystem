@@ -2,25 +2,63 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Животные</title>
+    <title>Список животных</title>
     <link rel="stylesheet" th:href="@{/css/animals_style.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<header>
-    <h1>Список животных</h1>
-</header>
+<header><h1>Список животных</h1></header>
 <main>
+    <!-- Форма фильтрации -->
+    <form class="filter-bar" method="get" th:object="${filter}">
+        <h2>Фильтры</h2>
+
+        <!-- 1. Кличка -->
+        <label for="nickname">Кличка</label>
+        <input id="nickname" type="text" th:field="*{nickname}" placeholder="Часть имени"/>
+
+        <!-- 2. Тип животного -->
+        <label for="animalType">Тип</label>
+        <select id="animalType" th:field="*{animalTypeIds}">
+            <option value="" selected>— Все —</option>
+            <option th:each="type : ${animalTypeList}"
+                    th:value="${type.id}"
+                    th:text="${type.type}">
+            </option>
+        </select>
+
+        <!-- 3. Пол -->
+        <label for="gender">Пол</label>
+        <select id="gender" th:field="*{genders}">
+            <option value="" selected>— Все —</option>
+            <option value="мужской">мужской</option>
+            <option value="женский">женский</option>
+        </select>
+
+        <!-- 4. Нуждается в теплом жилье -->
+        <label for="needsWarm">Тёплое жильё</label>
+        <select id="needsWarm" th:field="*{needsWarnHousing}">
+            <option value="" selected>— Все —</option>
+            <option th:value="true">Да</option>
+            <option th:value="false">Нет</option>
+        </select>
+
+        <div class="filter-buttons">
+            <button type="submit" class="btn">Применить</button>
+            <a th:href="@{/zoo/animals}" class="btn">Сброс</a>
+        </div>
+    </form>
+
+    <!-- Список животных -->
     <div class="animal-list">
         <div class="employee-card" th:each="animal : ${animals}">
-            <a class="employee-link" th:href="@{/zoo/animals/{id}(id=${animal.id})}"
-               th:text="${animal.nickname} + ' (' + animal.animal_type_name + ')'">
-                Название животного
+            <a class="employee-link"
+               th:href="@{/zoo/animals/{id}(id=${animal.id})}"
+               th:text="${animal.nickname} + ' (' + ${animal.animalTypeName} + ')'">
+                Кличка (тип)
             </a>
         </div>
     </div>
+
     <div class="add-new">
         <a th:href="@{/zoo/animals/new}" class="btn">Добавить новое животное</a>
     </div>

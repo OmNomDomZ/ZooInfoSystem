@@ -5,30 +5,54 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import v.rabetsky.dao.AnimalDAO;
+import v.rabetsky.dao.AnimalTypeDAO;
+import v.rabetsky.dao.DietTypeDAO;
+import v.rabetsky.dto.AnimalDTO;
+import v.rabetsky.models.AnimalFilter;
 import v.rabetsky.models.entities.Animal;
+import v.rabetsky.models.entities.AnimalType;
+import v.rabetsky.models.entities.DietType;
+import v.rabetsky.services.AnimalService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/zoo/animals")
 public class AnimalsController {
-    private final AnimalDAO animalDAO;
+    private final AnimalService animalService;
+    private final AnimalTypeDAO animalTypeDAO;
+    private final DietTypeDAO dietTypeDAO;
 
     @Autowired
-    public AnimalsController(AnimalDAO animalDAO) {
-        this.animalDAO = animalDAO;
+    public AnimalsController(AnimalService animalService, AnimalTypeDAO animalTypeDAO, DietTypeDAO dietTypeDAO) {
+        this.animalService = animalService;
+        this.animalTypeDAO = animalTypeDAO;
+        this.dietTypeDAO = dietTypeDAO;
+    }
+
+    @ModelAttribute("animalTypeList")
+    public List<AnimalType> animalTypes() {
+        return animalTypeDAO.findAll();
+    }
+
+    @ModelAttribute("dietTypeList")
+    public List<DietType> dietTypes() {
+        return dietTypeDAO.findAll();
     }
 
     @GetMapping("")
-    public String index(Model model) {
-        model.addAttribute("animals", animalDAO.index());
+    public String index(AnimalFilter filter, Model model) {
+        model.addAttribute("filter", filter);
+
+        List<AnimalDTO> animals = animalService.getAllAnimals(filter);
+        model.addAttribute("animals", animals);
         return "animals/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("animal", animalDAO.show(id));
+        model.addAttribute("animal", animalService.findById(id));
         return "animals/show";
     }
 
@@ -43,13 +67,13 @@ public class AnimalsController {
         if (bindingResult.hasErrors()) {
             return "animals/new";
         }
-        animalDAO.save(animal);
+        animalService.save(animal);
         return "redirect:/zoo/animals";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        model.addAttribute("animal", animalDAO.show(id));
+        model.addAttribute("animal", animalService.findById(id));
         return "animals/edit";
     }
 
@@ -60,13 +84,13 @@ public class AnimalsController {
         if (bindingResult.hasErrors()) {
             return "animals/edit";
         }
-        animalDAO.update(id, animal);
+        animalService.update(id, animal);
         return "redirect:/zoo/animals";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        animalDAO.delete(id);
+        animalService.delete(id);
         return "redirect:/zoo/animals";
     }
 }

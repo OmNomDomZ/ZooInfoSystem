@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import v.rabetsky.models.AnimalFilter;
 import v.rabetsky.models.entities.Animal;
 
 import java.util.List;
@@ -19,9 +20,21 @@ public class AnimalDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Animal> index() {
-        log.info("Animals: получение списка животных");
-        List<Animal> animals = jdbcTemplate.query("SELECT * FROM animals", new BeanPropertyRowMapper<>(Animal.class));
+    public List<Animal> findByFilter(AnimalFilter f) {
+        List<Animal> animals =  jdbcTemplate.query(
+                "SELECT * FROM get_animals(?, ?, ?, ?, ?)",
+                new BeanPropertyRowMapper<>(Animal.class),
+                f.getNickname(),
+                f.getAnimalTypeIds(),
+                f.getGenders(),
+                f.getNeedsWarnHousing(),
+                f.getCageIds()
+        );
+        log.info("Filters: {}, {}, {}, {}, {}", f.getNickname(),
+                f.getAnimalTypeIds(),
+                f.getGenders(),
+                f.getNeedsWarnHousing(),
+                f.getCageIds());
         return animals;
     }
 
@@ -35,7 +48,7 @@ public class AnimalDAO {
     public void save(Animal animal) {
         jdbcTemplate.update(
                 "INSERT INTO animals (nickname, gender, arrival_date, needs_warm_housing, animal_type_id, cage_id) VALUES (?, ?, ?, ?, ?, ?)",
-                animal.getNickname(), animal.getGender(), animal.getArrivalDate(), animal.isNeeds_warm_housing(), animal.getAnimalTypeId(), animal.getCageId()
+                animal.getNickname(), animal.getGender(), animal.getArrivalDate(), animal.isNeedsWarmHousing(), animal.getAnimalTypeId(), animal.getCageId()
         );
         log.info("Animals: добавлено новое животное");
     }
@@ -43,7 +56,7 @@ public class AnimalDAO {
     public void update(int id, Animal animal) {
         jdbcTemplate.update(
                 "UPDATE animals SET nickname = ?, gender = ?, arrival_date = ?, needs_warm_housing = ?, animal_type_id = ?, cage_id = ? WHERE id = ?",
-                animal.getNickname(), animal.getGender(), animal.getArrivalDate(), animal.isNeeds_warm_housing(), animal.getAnimalTypeId(), animal.getCageId(), id
+                animal.getNickname(), animal.getGender(), animal.getArrivalDate(), animal.isNeedsWarmHousing(), animal.getAnimalTypeId(), animal.getCageId(), id
         );
         log.info("Animals: обновлено животное id={}", id);
     }
