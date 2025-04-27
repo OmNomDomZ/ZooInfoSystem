@@ -64,69 +64,66 @@ create trigger trg_update_animal_cage_history
 execute procedure update_animal_cage_history();
 
 -- автоматическая проверка совместимости
+drop trigger  if exists trg_check_compatibility on animals;
+drop function if exists check_compatibility();
+
 create or replace function check_compatibility()
-    returns trigger as
+    returns trigger
+    language plpgsql
+as
 $$
 declare
-    diet           varchar(50);
-    neighbor_diet1 varchar(50);
-    neighbor_diet2 varchar(50);
-
+    new_diet          varchar(50);
+    conflict_diet     varchar(50);
+    conflict_cage_id  int;
 begin
-    if new.cage_id is distinct from old.cage_id then
+    if tg_op = 'insert'
+        or (tg_op = 'update' and new.cage_id is distinct from old.cage_id)
+    then
+        -- 1. определяем диету перемещаемого животного
         select dt.type
-        into diet
+        into new_diet
         from animal_types at
-                 join diet_types dt on dt.id = at.diet_type_id
+                 join diet_types  dt on dt.id = at.diet_type_id
         where at.id = new.animal_type_id;
 
-        select dt.type
-        into neighbor_diet1
-        from animals a
-                 join animal_types at on a.animal_type_id = at.id
-                 join diet_types dt on dt.id = at.diet_type_id
-        where a.id = new.cage_id - 1
-        limit 1;
+        -- 2. ищем конфликт:
+        --    (а) в самой целевой клетке
+        --    (б) в соседних клетках (id-1, id+1)
+        for conflict_cage_id in
+            select c_id
+            from (values (new.cage_id),
+                         (new.cage_id - 1),
+                         (new.cage_id + 1)) as t(c_id)
+            loop
+                select dt.type
+                into conflict_diet
+                from animals a
+                         join animal_types at2 on at2.id = a.animal_type_id
+                         join diet_types  dt  on dt.id  = at2.diet_type_id
+                where a.cage_id = conflict_cage_id
+                  and a.id     <> coalesce(new.id,-1)
+                  and ((new_diet = 'хищник'     and dt.type = 'травоядное') or
+                       (new_diet = 'травоядное' and dt.type = 'хищник'))
+                limit 1;
 
-        select dt.type
-        into neighbor_diet2
-        from animals a
-                 join animal_types at on a.animal_type_id = at.id
-                 join diet_types dt on dt.id = at.diet_type_id
-        where a.id = new.cage_id + 1
-        limit 1;
-
-
-        if neighbor_diet1 is not null then
-            if (diet = 'хищник' and neighbor_diet1 = 'травоядное') or
-               (diet = 'травоядное' and neighbor_diet1 = 'хищник')
-            then
-                new.cage_id := old.cage_id;
-                raise notice 'Несовместимость с животными (%) в соседней клетке (CAGE %). Животное возвращено в клетку %',
-                    neighbor_diet1, new.cage_id - 1, OLD.cage_id;
-                return new;
-            end if;
-        end if;
-
-        if neighbor_diet2 is not null then
-            if (diet = 'хищник' and neighbor_diet2 = 'травоядное') or
-               (diet = 'травоядное' and neighbor_diet2 = 'хищник')
-            then
-                new.cage_id := old.cage_id;
-                raise notice 'Несовместимость с животными (%) в соседней клетке (CAGE %). Животное возвращено в клетку %',
-                    neighbor_diet2, new.cage_id + 1, OLD.cage_id;
-                return new;
-            end if;
-        end if;
-
+                if conflict_diet is not null then
+                    -- конфликт найден → возвращаем в старую клетку
+                    new.cage_id := coalesce(old.cage_id, null);
+                    raise notice
+                        'несовместимость: % (диета=%) нельзя поселить в клетку %, рядом/внутри есть животное с диетой % (клетка %)',
+                        new.nickname, new_diet, conflict_cage_id, conflict_diet, conflict_cage_id;
+                    return new;
+                end if;
+            end loop;
     end if;
 
     return new;
 end;
-$$ language plpgsql;
+$$;
 
 create trigger trg_check_compatibility
-    before update
+    before insert or update of cage_id
     on animals
     for each row
 execute procedure check_compatibility();

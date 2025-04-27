@@ -1,54 +1,56 @@
 package v.rabetsky.dao;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import v.rabetsky.models.filters.SupplierFilter;
 import v.rabetsky.models.entities.Supplier;
-
 import java.util.List;
 
-@Slf4j
 @Component
 public class SupplierDAO {
-    private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbc;
 
-    @Autowired
-    public SupplierDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public SupplierDAO(JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
     }
 
-    public List<Supplier> index() {
-        log.info("Suppliers: получение списка поставщиков");
-        return jdbcTemplate.query("SELECT * FROM suppliers", new BeanPropertyRowMapper<>(Supplier.class));
+    public List<Supplier> findByFilter(SupplierFilter f) {
+        return jdbc.query(
+                "SELECT * FROM get_suppliers(?,?,?,?,?,?)",
+                new BeanPropertyRowMapper<>(Supplier.class),
+                f.getName(),
+                f.getFoodIds(),
+                f.getFoodTypeIds(),
+                f.getDateFrom(),
+                f.getDateTo(),
+                f.getIsProducedInternally()
+        );
     }
 
-    public Supplier show(int id) {
-        Supplier supplier = jdbcTemplate.queryForObject("SELECT * FROM suppliers WHERE id = ?",
-                new BeanPropertyRowMapper<>(Supplier.class), id);
-        log.info("Suppliers: показ поставщика id={}", id);
-        return supplier;
+    public Supplier findById(int id) {
+        return jdbc.queryForObject(
+                "SELECT * FROM suppliers WHERE id = ?",
+                new BeanPropertyRowMapper<>(Supplier.class),
+                id
+        );
     }
 
-    public void save(Supplier supplier) {
-        jdbcTemplate.update(
+    public void save(Supplier s) {
+        jdbc.update(
                 "INSERT INTO suppliers (name, contacts) VALUES (?, ?)",
-                supplier.getName(), supplier.getContacts()
+                s.getName(), s.getContacts()
         );
-        log.info("Suppliers: добавлен новый поставщик");
     }
 
-    public void update(int id, Supplier supplier) {
-        jdbcTemplate.update(
+    public void update(int id, Supplier s) {
+        jdbc.update(
                 "UPDATE suppliers SET name = ?, contacts = ? WHERE id = ?",
-                supplier.getName(), supplier.getContacts(), id
+                s.getName(), s.getContacts(), id
         );
-        log.info("Suppliers: обновлён поставщик id={}", id);
     }
 
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM suppliers WHERE id = ?", id);
-        log.info("Suppliers: удалён поставщик id={}", id);
+        jdbc.update("DELETE FROM suppliers WHERE id = ?", id);
     }
 }

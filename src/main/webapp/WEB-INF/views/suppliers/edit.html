@@ -1,30 +1,21 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Редактирование поставщика</title>
-    <link rel="stylesheet" th:href="@{/css/suppliers_style.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8"/>
+    <title>Редактировать поставщика</title>
+    <link rel="stylesheet" th:href="@{/css/suppliers_style.css}"/>
 </head>
 <body>
-<header>
-    <h1>Редактирование поставщика</h1>
-</header>
-<main>
-    <form th:method="PATCH" th:action="@{/zoo/suppliers/{id}(id=${supplier.id})}" th:object="${supplier}">
-        <label for="name">Название:</label>
-        <input type="text" th:field="*{name}" id="name"/>
-        <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-        <br/>
-
-        <label for="contacts">Контакты:</label>
-        <input type="text" th:field="*{contacts}" id="contacts"/>
-        <div style="color:red" th:if="${#fields.hasErrors('contacts')}" th:errors="*{contacts}"></div>
-        <br/>
-
-        <input type="submit" value="Обновить" class="btn">
+<main class="form-page">
+    <h1>Редактировать поставщика</h1>
+    <form th:method="patch" th:action="@{/zoo/suppliers/{id}(id=${supplier.id})}" th:object="${supplier}">
+        <label>Название:</label>
+        <input type="text" th:field="*{name}"/>
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
+        <label>Контакты:</label>
+        <input type="text" th:field="*{contacts}"/>
+        <div th:if="${#fields.hasErrors('contacts')}" th:errors="*{contacts}"/>
+        <button class="btn">Сохранить</button>
     </form>
 </main>
 </body>

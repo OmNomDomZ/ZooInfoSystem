@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import v.rabetsky.dao.PositionDAO;
 import v.rabetsky.dto.EmployeeDTO;
 import v.rabetsky.models.entities.Employee;
-import v.rabetsky.models.EmployeeFilter;
+import v.rabetsky.models.filters.EmployeeFilter;
 import v.rabetsky.models.entities.Position;
 import v.rabetsky.services.EmployeeService;
 

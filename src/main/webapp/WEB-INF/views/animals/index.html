@@ -42,6 +42,16 @@
             <option th:value="false">Нет</option>
         </select>
 
+        <!-- 5. Клетка -->
+        <label for="cage">Клетка</label>
+        <select id="cage" th:field="*{cageIds}" multiple>
+            <option th:each="c : ${cageList}"
+                    th:value="${c.id}"
+                    th:text="'ID ' + ${c.id} + ' (' + ${c.climateZone} + ')'"
+                    th:selected="${filter.cageIds != null and #arrays.contains(filter.cageIds, c.id)}"
+            </option>
+        </select>
+
         <div class="filter-buttons">
             <button type="submit" class="btn">Применить</button>
             <a th:href="@{/zoo/animals}" class="btn">Сброс</a>

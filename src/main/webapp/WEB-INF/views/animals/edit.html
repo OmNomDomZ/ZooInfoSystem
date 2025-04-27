@@ -1,53 +1,60 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Редактирование животного</title>
-    <link rel="stylesheet" th:href="@{/css/animals_style.css}">
+    <meta charset="UTF-8"/>
+    <title>Редактировать животное</title>
+    <link rel="stylesheet" th:href="@{/css/animals_style.css}"/>
 </head>
 <body>
-<header><h1>Редактирование животного</h1></header>
+<header>
+    <h1>Редактировать животное</h1>
+</header>
 <main>
-    <form th:method="PATCH"
-          th:action="@{/zoo/animals/{id}(id=${animal.id})}"
-          th:object="${animal}">
+    <form th:action="@{/zoo/animals/{id}(id=${animal.id})}" th:object="${animal}" method="post">
+        <input type="hidden" name="_method" value="patch"/>
+
         <label for="nickname">Кличка:</label>
-        <input type="text" th:field="*{nickname}" id="nickname"/>
-        <div style="color:red" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
-        <br/>
+        <input type="text" id="nickname" th:field="*{nickname}"/>
+        <div th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
 
         <label for="gender">Пол:</label>
-        <select th:field="*{gender}" id="gender">
-            <option value="мужской">мужской</option>
-            <option value="женский">женский</option>
+        <select id="gender" th:field="*{gender}">
+            <option value="мужской" th:selected="${animal.gender=='мужской'}">мужской</option>
+            <option value="женский" th:selected="${animal.gender=='женский'}">женский</option>
         </select>
-        <div style="color:red" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
-        <br/>
+        <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
 
-        <label for="arrival_date">Дата прибытия:</label>
-        <input type="date" th:field="*{arrivalDate}" id="arrival_date"/>
-        <div style="color:red" th:if="${#fields.hasErrors('arrivalDate')}" th:errors="*{arrivalDate}"></div>
-        <br/>
+        <label for="arrivalDate">Дата прибытия:</label>
+        <input type="date" id="arrivalDate" th:field="*{arrivalDate}"/>
+        <div th:if="${#fields.hasErrors('arrivalDate')}" th:errors="*{arrivalDate}"></div>
 
-        <label for="needs_warm_housing">Нуждается в теплом жилье:</label>
-        <input type="checkbox" th:field="*{needsWarmHousing}" id="needs_warm_housing"/>
-        <br/>
+        <label>
+            <input type="checkbox" th:field="*{needsWarmHousing}"/>
+            Нуждается в тёплом жилье
+        </label>
 
-        <label for="animal_type_id">Тип животного:</label>
-        <select th:field="*{animalTypeId}" id="animal_type_id">
-            <option th:each="type: ${animalTypeList}"
-                    th:value="${type.id}"
-                    th:text="${type.type}">
-            </option>
+        <label for="animalTypeId">Тип животного:</label>
+        <select id="animalTypeId" th:field="*{animalTypeId}">
+            <option th:each="t : ${animalTypeList}"
+                    th:value="${t.id}"
+                    th:text="${t.type}"
+                    th:selected="${t.id == animal.animalTypeId}">Тип</option>
         </select>
-        <div style="color:red" th:if="${#fields.hasErrors('animalTypeId')}" th:errors="*{animalTypeId}"></div>
-        <br/>
+        <div th:if="${#fields.hasErrors('animalTypeId')}" th:errors="*{animalTypeId}"></div>
 
-        <label for="cage_id">ID клетки:</label>
-        <input type="number" th:field="*{cageId}" id="cage_id"/>
-        <br/><br/>
+        <label for="cageId">Клетка:</label>
+        <select id="cageId" th:field="*{cageId}">
+            <option th:each="c : ${cageList}"
+                    th:value="${c.id}"
+                    th:text="${'ID ' + c.id + ' (' + c.climateZone + ')'}"
+                    th:selected="${c.id == animal.cageId}">Клетка</option>
+        </select>
+        <div th:if="${#fields.hasErrors('cageId')}" th:errors="*{cageId}"></div>
 
-        <input type="submit" value="Обновить" class="btn"/>
+        <div class="buttons">
+            <button type="submit" class="btn">Сохранить</button>
+            <a th:href="@{/zoo/animals/{id}(id=${animal.id})}" class="btn">Отмена</a>
+        </div>
     </form>
 </main>
 </body>

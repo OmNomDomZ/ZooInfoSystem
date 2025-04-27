@@ -1,4 +1,4 @@
-package v.rabetsky.models;
+package v.rabetsky.models.filters;
 
 import lombok.Getter;
 import lombok.Setter;

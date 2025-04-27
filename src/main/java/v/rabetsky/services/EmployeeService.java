@@ -5,7 +5,7 @@ import v.rabetsky.dao.EmployeeDAO;
 import v.rabetsky.dao.PositionDAO;
 import v.rabetsky.dto.EmployeeDTO;
 import v.rabetsky.models.entities.Employee;
-import v.rabetsky.models.EmployeeFilter;
+import v.rabetsky.models.filters.EmployeeFilter;
 import v.rabetsky.models.entities.Position;
 
 import java.util.List;

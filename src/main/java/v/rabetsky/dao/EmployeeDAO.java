@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import v.rabetsky.models.entities.Employee;
-import v.rabetsky.models.EmployeeFilter;
+import v.rabetsky.models.filters.EmployeeFilter;
 
 import java.util.List;
 

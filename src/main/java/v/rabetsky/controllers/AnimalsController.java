@@ -6,90 +6,83 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import v.rabetsky.dao.AnimalTypeDAO;
-import v.rabetsky.dao.DietTypeDAO;
-import v.rabetsky.dto.AnimalDTO;
-import v.rabetsky.models.AnimalFilter;
+import v.rabetsky.dao.CageDAO;
+import v.rabetsky.models.filters.AnimalFilter;
 import v.rabetsky.models.entities.Animal;
-import v.rabetsky.models.entities.AnimalType;
-import v.rabetsky.models.entities.DietType;
 import v.rabetsky.services.AnimalService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/zoo/animals")
 public class AnimalsController {
     private final AnimalService animalService;
+    private final CageDAO cageDAO;
     private final AnimalTypeDAO animalTypeDAO;
-    private final DietTypeDAO dietTypeDAO;
 
     @Autowired
-    public AnimalsController(AnimalService animalService, AnimalTypeDAO animalTypeDAO, DietTypeDAO dietTypeDAO) {
-        this.animalService = animalService;
-        this.animalTypeDAO = animalTypeDAO;
-        this.dietTypeDAO = dietTypeDAO;
-    }
-
-    @ModelAttribute("animalTypeList")
-    public List<AnimalType> animalTypes() {
-        return animalTypeDAO.findAll();
-    }
-
-    @ModelAttribute("dietTypeList")
-    public List<DietType> dietTypes() {
-        return dietTypeDAO.findAll();
+    public AnimalsController(AnimalService animalService,
+                             CageDAO cageDAO,
+                             AnimalTypeDAO animalTypeDAO) {
+        this.animalService   = animalService;
+        this.cageDAO         = cageDAO;
+        this.animalTypeDAO   = animalTypeDAO;
     }
 
     @GetMapping("")
     public String index(AnimalFilter filter, Model model) {
-        model.addAttribute("filter", filter);
-
-        List<AnimalDTO> animals = animalService.getAllAnimals(filter);
-        model.addAttribute("animals", animals);
+        model.addAttribute("filter",         filter);
+        model.addAttribute("animalTypeList", animalTypeDAO.findAll());
+        model.addAttribute("cageList",       cageDAO.findAll());                 
+        model.addAttribute("animals",        animalService.getAllAnimals(filter));
         return "animals/index";
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("animal", animalService.findById(id));
+    public String show(@PathVariable int id, Model model) {
+        model.addAttribute("animal",          animalService.findById(id));
+        model.addAttribute("history",         animalService.getHistory(id));
+        model.addAttribute("medicalRecords",  animalService.getMedicalRecords(id));
+        model.addAttribute("birthRecords",    animalService.getBirthRecords(id));
         return "animals/show";
     }
 
     @GetMapping("/new")
-    public String newAnimal(@ModelAttribute("animal") Animal animal) {
+    public String newAnimal(Model model) {
+        model.addAttribute("animal", new Animal());
+        model.addAttribute("cageList", cageDAO.findAll());
+        model.addAttribute("animalTypeList", animalTypeDAO.findAll());
         return "animals/new";
     }
 
     @PostMapping("")
-    public String create(@ModelAttribute("animal") @Valid Animal animal,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public String create(@ModelAttribute @Valid Animal animal,
+                         BindingResult br, Model model) {
+        if (br.hasErrors()) {
+            model.addAttribute("cageList", cageDAO.findAll());
+            model.addAttribute("animalTypeList", animalTypeDAO.findAll());
             return "animals/new";
         }
-        animalService.save(animal);
-        return "redirect:/zoo/animals";
+        int newId = animalService.save(animal);
+        return "redirect:/zoo/animals/" + newId + "/medical/new";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable("id") int id, Model model) {
+    public String edit(@PathVariable int id, Model model) {
         model.addAttribute("animal", animalService.findById(id));
+        model.addAttribute("cageList", cageDAO.findAll());
+        model.addAttribute("animalTypeList", animalTypeDAO.findAll());
         return "animals/edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("animal") @Valid Animal animal,
-                         BindingResult bindingResult,
-                         @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()) {
-            return "animals/edit";
-        }
+    public String update(@ModelAttribute Animal animal, @PathVariable int id) {
         animalService.update(id, animal);
         return "redirect:/zoo/animals";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id) {
+    public String delete(@PathVariable int id) {
         animalService.delete(id);
         return "redirect:/zoo/animals";
     }

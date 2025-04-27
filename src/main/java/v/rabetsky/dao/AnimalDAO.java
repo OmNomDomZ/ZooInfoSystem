@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import v.rabetsky.models.AnimalFilter;
+import v.rabetsky.models.filters.AnimalFilter;
 import v.rabetsky.models.entities.Animal;
 
 import java.util.List;
@@ -64,5 +64,13 @@ public class AnimalDAO {
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM animals WHERE id = ?", id);
         log.info("Animals: удалено животное id={}", id);
+    }
+
+    public int saveReturningId(Animal a) {
+        return jdbcTemplate.queryForObject("INSERT INTO animals (nickname, gender, arrival_date, needs_warm_housing, animal_type_id, cage_id) " +
+                        "VALUES (?,?,?,?,?,?) RETURNING id", Integer.class,
+                a.getNickname(), a.getGender(), a.getArrivalDate(),
+                a.isNeedsWarmHousing(), a.getAnimalTypeId(), a.getCageId()
+        );
     }
 }

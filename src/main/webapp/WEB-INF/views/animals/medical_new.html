@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Новая медкарта</title>
+    <link rel="stylesheet" th:href="@{/css/medical_style.css}"/>
+</head>
+<body>
+<header>
+    <h1>Создать медкнижку</h1>
+</header>
+<main>
+    <form th:action="@{/zoo/animals/{animalId}/medical(animalId=${medicalRecord.animalId})}"
+          th:object="${medicalRecord}" method="post">
+        <label for="birthDate">Дата рождения:</label>
+        <input type="date" id="birthDate" th:field="*{birthDate}"/>
+        <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
+
+        <label for="weight">Вес (кг):</label>
+        <input type="number" id="weight" step="0.01" th:field="*{weight}"/>
+        <div th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}"></div>
+
+        <label for="height">Рост (м):</label>
+        <input type="number" id="height" step="0.01" th:field="*{height}"/>
+        <div th:if="${#fields.hasErrors('height')}" th:errors="*{height}"></div>
+
+        <label for="checkupDate">Дата осмотра:</label>
+        <input type="date" id="checkupDate" th:field="*{checkupDate}"/>
+        <div th:if="${#fields.hasErrors('checkupDate')}" th:errors="*{checkupDate}"></div>
+
+        <label for="vaccinations">Прививки:</label>
+        <input type="text" id="vaccinations" th:field="*{vaccinations}"/>
+
+        <label for="illnesses">Болезни:</label>
+        <input type="text" id="illnesses" th:field="*{illnesses}"/>
+
+        <div class="buttons">
+            <button type="submit" class="btn">Сохранить медкнижку</button>
+            <a th:href="@{/zoo/animals/{animalId}(animalId=${medicalRecord.animalId})}" class="btn">К животному</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
