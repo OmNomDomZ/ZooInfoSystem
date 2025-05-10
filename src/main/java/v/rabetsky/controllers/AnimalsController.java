@@ -99,9 +99,20 @@ public class AnimalsController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute Animal animal, @PathVariable int id) {
-        animalService.update(id, animal);
-        return "redirect:/zoo/animals";
+    public String update(@ModelAttribute("animal") @Valid Animal animal,
+                         BindingResult br,
+                         @PathVariable int id,
+                         Model model) {
+
+        try {
+            animalService.update(id, animal);
+            return "redirect:/zoo/animals";
+        } catch (RuntimeException ex) {
+            model.addAttribute("cageList", cageDAO.findAllDTO());
+            model.addAttribute("animalTypeList", animalTypeDAO.findAll());
+            br.reject("", ex.getMessage());
+            return "animals/edit";
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -14,7 +14,7 @@
         <input type="hidden" name="_method" value="patch"/>
 
         <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="error" th:each="e:${#fields.globalErrors()}" th:text="${e}"></p>
+            <p th:each="e : ${#fields.globalErrors()}" th:text="${e}" style="color: red;"></p>
         </div>
 
         <label for="nickname">Кличка</label>
@@ -29,7 +29,7 @@
         <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
 
         <label for="arrivalDate">Дата прибытия</label>
-        <input id="arrivalDate" type="date" th:field="*{arrivalDate}" max="${#dates.format(today,'yyyy-MM-dd')}"/>
+        <input id="arrivalDate" type="date" th:field="*{arrivalDate}" />
         <div th:if="${#fields.hasErrors('arrivalDate')}" th:errors="*{arrivalDate}"></div>
 
         <label><input type="checkbox" th:field="*{needsWarmHousing}"/> Нуждается в тёплом жилье</label>

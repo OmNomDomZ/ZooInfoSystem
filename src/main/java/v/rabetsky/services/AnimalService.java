@@ -1,5 +1,6 @@
 package v.rabetsky.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import v.rabetsky.dao.*;
 import v.rabetsky.dto.AnimalDTO;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AnimalService {
     private final AnimalDAO animalDAO;
@@ -102,7 +104,26 @@ public class AnimalService {
     }
 
     public void update(int id, Animal animal) {
+        validateUpdate(animal);
         animalDAO.update(id, animal);
+    }
+
+    private void validateUpdate(Animal animal) {
+        Integer newCageId = animal.getCageId();
+        if (newCageId == null) {
+            throw new RuntimeException("Нужно указать клетку");
+        }
+        Cage cage = cageDAO.findById(newCageId);
+        if (cage == null) {
+            throw new RuntimeException("Клетка не найдена");
+        }
+        Integer cageAnimalTypeId = cage.getAnimalTypeId();
+
+        Integer animalTypeId = animal.getAnimalTypeId();
+        if (!animalTypeId.equals(cageAnimalTypeId)) {
+            throw new RuntimeException(
+                    "Переместить можно только в клетку того же вида");
+        }
     }
 
     public void delete(int id) {
