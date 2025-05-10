@@ -22,35 +22,27 @@ public class AnimalDAO {
 
     public List<Animal> findByFilter(AnimalFilter f) {
         List<Animal> animals =  jdbcTemplate.query(
-                "SELECT * FROM get_animals(?, ?, ?, ?, ?)",
+                "SELECT * FROM get_animals(?, ?, ?, ?, ?) ORDER BY id",
                 new BeanPropertyRowMapper<>(Animal.class),
                 f.getNickname(),
                 f.getAnimalTypeIds(),
                 f.getGenders(),
-                f.getNeedsWarnHousing(),
+                f.getNeedsWarmHousing(),
                 f.getCageIds()
         );
         log.info("Filters: {}, {}, {}, {}, {}", f.getNickname(),
                 f.getAnimalTypeIds(),
                 f.getGenders(),
-                f.getNeedsWarnHousing(),
+                f.getNeedsWarmHousing(),
                 f.getCageIds());
         return animals;
     }
 
     public Animal show(int id) {
-        Animal animal = jdbcTemplate.queryForObject("SELECT * FROM animals WHERE id = ?",
+        Animal animal = jdbcTemplate.queryForObject("SELECT * FROM animals WHERE id = ? ORDER BY id",
                 new BeanPropertyRowMapper<>(Animal.class), id);
         log.info("Animals: показ животного id={}", id);
         return animal;
-    }
-
-    public void save(Animal animal) {
-        jdbcTemplate.update(
-                "INSERT INTO animals (nickname, gender, arrival_date, needs_warm_housing, animal_type_id, cage_id) VALUES (?, ?, ?, ?, ?, ?)",
-                animal.getNickname(), animal.getGender(), animal.getArrivalDate(), animal.isNeedsWarmHousing(), animal.getAnimalTypeId(), animal.getCageId()
-        );
-        log.info("Animals: добавлено новое животное");
     }
 
     public void update(int id, Animal animal) {
@@ -67,10 +59,18 @@ public class AnimalDAO {
     }
 
     public int saveReturningId(Animal a) {
+        log.info("Animals: добавлено новое животное");
         return jdbcTemplate.queryForObject("INSERT INTO animals (nickname, gender, arrival_date, needs_warm_housing, animal_type_id, cage_id) " +
                         "VALUES (?,?,?,?,?,?) RETURNING id", Integer.class,
                 a.getNickname(), a.getGender(), a.getArrivalDate(),
                 a.isNeedsWarmHousing(), a.getAnimalTypeId(), a.getCageId()
+        );
+    }
+
+    public void updateCage(int animalId, int newCageId) {
+        jdbcTemplate.update(
+                "UPDATE animals SET cage_id = ? WHERE id = ?",
+                newCageId, animalId
         );
     }
 }

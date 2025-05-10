@@ -10,5 +10,5 @@ public class AnimalFilter {
     private Integer[] animalTypeIds;
     private String[] genders;
     private Integer[] cageIds;
-    private Boolean needsWarnHousing;
+    private Boolean needsWarmHousing;
 }

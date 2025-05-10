@@ -10,36 +10,34 @@
     <h1>Редактировать медкнижку</h1>
 </header>
 <main>
-    <form th:action="@{/zoo/animals/{animalId}/medical/{id}/edit(
-               animalId=${medicalRecord.animalId},
-               id=${medicalRecord.id})}"
+    <form th:action="@{/zoo/animals/{animalId}/medical/{id}/edit(animalId=${medicalRecord.animalId},id=${medicalRecord.id})}"
           th:object="${medicalRecord}" method="post">
-        <input type="hidden" th:field="*{id}"/>
-        <input type="hidden" th:field="*{animalId}"/>
-
         <input type="hidden" name="_method" value="patch"/>
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="error" th:each="e:${#fields.globalErrors()}" th:text="${e}"></p>
+        </div>
 
-        <label for="birthDate">Дата рождения:</label>
-        <input type="date" id="birthDate" th:field="*{birthDate}"/>
+        <label for="birthDate">Дата рождения</label>
+        <input id="birthDate" type="date" th:field="*{birthDate}" max="${#dates.format(today,'yyyy-MM-dd')}"/>
         <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
 
-        <label for="weight">Вес (кг):</label>
-        <input type="number" id="weight" step="0.01" th:field="*{weight}"/>
+        <label for="weight">Вес (кг)</label>
+        <input id="weight" type="number" th:field="*{weight}" step="0.01" min="0.1"/>
         <div th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}"></div>
 
-        <label for="height">Рост (м):</label>
-        <input type="number" id="height" step="0.01" th:field="*{height}"/>
+        <label for="height">Рост (м)</label>
+        <input id="height" type="number" th:field="*{height}" step="0.01" min="0.1"/>
         <div th:if="${#fields.hasErrors('height')}" th:errors="*{height}"></div>
 
-        <label for="checkupDate">Дата осмотра:</label>
-        <input type="date" id="checkupDate" th:field="*{checkupDate}"/>
+        <label for="checkupDate">Дата осмотра</label>
+        <input id="checkupDate" type="date" th:field="*{checkupDate}" max="${#dates.format(today,'yyyy-MM-dd')}"/>
         <div th:if="${#fields.hasErrors('checkupDate')}" th:errors="*{checkupDate}"></div>
 
-        <label for="vaccinations">Прививки:</label>
-        <input type="text" id="vaccinations" th:field="*{vaccinations}"/>
+        <label for="vaccinations">Прививки</label>
+        <input id="vaccinations" type="text" th:field="*{vaccinations}" maxlength="255"/>
 
-        <label for="illnesses">Болезни:</label>
-        <input type="text" id="illnesses" th:field="*{illnesses}"/>
+        <label for="illnesses">Болезни</label>
+        <input id="illnesses" type="text" th:field="*{illnesses}" maxlength="255"/>
 
         <div class="buttons">
             <button type="submit" class="btn">Обновить</button>

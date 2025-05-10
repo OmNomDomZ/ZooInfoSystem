@@ -17,7 +17,7 @@ public class AnimalTypeDAO {
 
     public List<AnimalType> findAll() {
         return jdbcTemplate.query(
-                "SELECT * FROM animal_types",
+                "SELECT * FROM animal_types ORDER BY id",
                 new BeanPropertyRowMapper<>(AnimalType.class)
         );
     }

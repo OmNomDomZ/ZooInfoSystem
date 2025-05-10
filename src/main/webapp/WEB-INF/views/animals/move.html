@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Переместить [[${animal.nickname}]]</title>
+    <link rel="stylesheet" th:href="@{/css/animals_style.css}"/>
+</head>
+<body>
+<header>
+    <h1>Переместить [[${animal.nickname}]]</h1>
+</header>
+<main>
+    <form th:action="@{/zoo/animals/{id}/move(id=${animal.id})}" method="post">
+        <p>Текущая клетка: <b>[[${animal.cageId}]]</b></p>
+        <label for="cageId">Новая клетка</label>
+        <select id="cageId" name="cageId" required>
+            <option value="" disabled selected>— Выберите клетку —</option>
+            <option th:each="c : ${cageOptions}"
+                    th:value="${c.id}"
+                    th:text="${'ID ' + c.id + ' (' + c.animalTypeName + ', вместимость ' + c.capacity + ')'}">
+            </option>
+        </select>
+        <div class="buttons">
+            <button type="submit" class="btn">Переместить</button>
+            <a th:href="@{/zoo/animals/{id}(id=${animal.id})}" class="btn">Отмена</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

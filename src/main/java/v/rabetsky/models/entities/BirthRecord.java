@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BirthRecord {
     private int id;
+    private Integer childId;
     private Integer parentId1;
     private Integer parentId2;
     private LocalDate birthDate;

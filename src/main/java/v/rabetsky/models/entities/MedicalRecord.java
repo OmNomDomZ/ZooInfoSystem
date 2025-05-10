@@ -1,12 +1,14 @@
 package v.rabetsky.models.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -14,17 +16,32 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class MedicalRecord {
     private int id;
-    private int animalId;
+
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Positive(message = "ID животного должен быть положительным")
+    private Integer animalId;
+
+    @NotNull(message = "Дата рождения обязательна")
+    @PastOrPresent(message = "Дата рождения не может быть в будущем")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
-    @NotNull @DecimalMin("0.1")
+
+    @NotNull(message = "Вес обязателен")
+    @DecimalMin(value = "0.1", message = "Вес должен быть больше 0")
     private BigDecimal weight;
-    @NotNull @DecimalMin("0.1")
+
+    @NotNull(message = "Рост обязателен")
+    @DecimalMin(value = "0.1", message = "Рост должен быть больше 0")
     private BigDecimal height;
+
+    @Size(max = 255, message = "Список прививок не должен превышать 255 символов")
     private String vaccinations;
+
+    @Size(max = 255, message = "Список болезней не должен превышать 255 символов")
     private String illnesses;
-    @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+
+    @NotNull(message = "Дата осмотра обязательна")
+    @PastOrPresent(message = "Дата осмотра не может быть в будущем")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkupDate;
 }

@@ -2,52 +2,57 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Редактировать животное</title>
+    <title>Редактировать [[${animal.nickname}]]</title>
     <link rel="stylesheet" th:href="@{/css/animals_style.css}"/>
 </head>
 <body>
 <header>
-    <h1>Редактировать животное</h1>
+    <h1>Редактировать [[${animal.nickname}]]</h1>
 </header>
 <main>
     <form th:action="@{/zoo/animals/{id}(id=${animal.id})}" th:object="${animal}" method="post">
         <input type="hidden" name="_method" value="patch"/>
 
-        <label for="nickname">Кличка:</label>
-        <input type="text" id="nickname" th:field="*{nickname}"/>
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="error" th:each="e:${#fields.globalErrors()}" th:text="${e}"></p>
+        </div>
+
+        <label for="nickname">Кличка</label>
+        <input id="nickname" type="text" th:field="*{nickname}" maxlength="50"/>
         <div th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
 
-        <label for="gender">Пол:</label>
+        <label for="gender">Пол</label>
         <select id="gender" th:field="*{gender}">
             <option value="мужской" th:selected="${animal.gender=='мужской'}">мужской</option>
             <option value="женский" th:selected="${animal.gender=='женский'}">женский</option>
         </select>
         <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
 
-        <label for="arrivalDate">Дата прибытия:</label>
-        <input type="date" id="arrivalDate" th:field="*{arrivalDate}"/>
+        <label for="arrivalDate">Дата прибытия</label>
+        <input id="arrivalDate" type="date" th:field="*{arrivalDate}" max="${#dates.format(today,'yyyy-MM-dd')}"/>
         <div th:if="${#fields.hasErrors('arrivalDate')}" th:errors="*{arrivalDate}"></div>
 
-        <label>
-            <input type="checkbox" th:field="*{needsWarmHousing}"/>
-            Нуждается в тёплом жилье
-        </label>
+        <label><input type="checkbox" th:field="*{needsWarmHousing}"/> Нуждается в тёплом жилье</label>
 
-        <label for="animalTypeId">Тип животного:</label>
+        <label for="animalTypeId">Тип</label>
         <select id="animalTypeId" th:field="*{animalTypeId}">
+            <option value="">— Выберите —</option>
             <option th:each="t : ${animalTypeList}"
                     th:value="${t.id}"
                     th:text="${t.type}"
-                    th:selected="${t.id == animal.animalTypeId}">Тип</option>
+                    th:selected="${t.id == animal.animalTypeId}">
+            </option>
         </select>
         <div th:if="${#fields.hasErrors('animalTypeId')}" th:errors="*{animalTypeId}"></div>
 
-        <label for="cageId">Клетка:</label>
-        <select id="cageId" th:field="*{cageId}">
+        <label for="cage">Клетка</label>
+        <select id="cage" th:field="*{cageId}">
+            <option value="">— Выберите —</option>
             <option th:each="c : ${cageList}"
                     th:value="${c.id}"
-                    th:text="${'ID ' + c.id + ' (' + c.climateZone + ')'}"
-                    th:selected="${c.id == animal.cageId}">Клетка</option>
+                    th:text="${'ID ' + c.id + ' (' + c.animalTypeName + ', вместимость ' + c.capacity + ')'}"
+                    th:selected="${c.id == animal.cageId}">
+            </option>
         </select>
         <div th:if="${#fields.hasErrors('cageId')}" th:errors="*{cageId}"></div>
 

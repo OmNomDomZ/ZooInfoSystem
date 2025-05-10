@@ -11,8 +11,8 @@ create table employees
     id                 serial primary key,
     full_name          varchar(100) not null,
     gender             varchar      not null check (gender in ('мужской', 'женский')),
-    hire_date          date         not null,
-    birth_date         date         not null,
+    hire_date          date         not null check (hire_date <= current_date),
+    birth_date         date         not null check (birth_date <= current_date),
     position_id        int          not null references positions (id) on delete restrict,
     salary             numeric(10, 2) check (salary >= 0),
     contact_info       text,
@@ -59,14 +59,13 @@ create table animal_types
     diet_type_id int          not null references diet_types (id) on delete cascade
 );
 
--- клетки
+-- клетки (жёстко привязаны к виду животного)
 create table cages
 (
-    id           serial primary key,
-    climate_zone varchar(100),
-    size         numeric(6, 2) check (size > 0),
-    temperature  numeric(4, 1),
-    max_num      int check (max_num > 0)
+    id             serial primary key,
+    animal_type_id int not null references animal_types (id)
+        on update cascade on delete restrict,
+    capacity       int not null check (capacity > 0)
 );
 
 -- животные
@@ -75,7 +74,7 @@ create table animals
     id                 serial primary key,
     nickname           varchar(50) not null,
     gender             varchar     not null check (gender in ('мужской', 'женский')),
-    arrival_date       date        not null,
+    arrival_date       date        not null check (arrival_date <= current_date),
     needs_warm_housing boolean default false,
     animal_type_id     int         not null references animal_types (id) on delete cascade,
     cage_id            int         references cages (id) on delete set null
@@ -136,11 +135,11 @@ create table suppliers
 create table suppliers_food
 (
     id            serial primary key,
-    supplier_id   int  not null references suppliers (id) on delete cascade,
-    food_id       int  not null references food (id) on delete cascade,
-    delivery_date date not null,
-    quantity      numeric(10, 2) check (quantity > 0),
-    price         numeric(10, 2) check (price >= 0)
+    supplier_id   int            not null references suppliers (id) on delete cascade,
+    food_id       int            not null references food (id) on delete cascade,
+    delivery_date date           not null check (delivery_date <= current_date),
+    quantity      numeric(10, 2) not null check (quantity > 0),
+    price         numeric(10, 2) not null check (price >= 0)
 );
 
 -- зоопарки
@@ -159,30 +158,32 @@ create table transfers
     animal_id          int  not null references animals (id) on delete cascade,
     reason             text not null,
     destination_zoo_id int  references zoos (id) on delete set null,
-    transfer_date      date not null
+    transfer_date      date not null check (transfer_date <= current_date)
 );
 
 -- медицинские записи
 create table medical_records
 (
     id           serial primary key,
-    animal_id    int  not null references animals (id) on delete cascade,
-    birth_date   date not null,
-    weight       numeric(6, 2) check (weight > 0),
-    height       numeric(6, 2) check (height > 0),
+    animal_id    int           not null references animals (id) on delete cascade,
+    birth_date   date          not null check (birth_date <= current_date),
+    weight       numeric(6, 2) not null check (weight > 0),
+    height       numeric(6, 2) not null check (height > 0),
     vaccinations text,
     illnesses    text,
-    checkup_date date not null
+    checkup_date date          not null check (checkup_date <= current_date)
 );
 
 -- записи о рождении
 create table birth_records
 (
     id          serial primary key,
-    parent_id_1 int  references animals (id) on delete set null,
-    parent_id_2 int  references animals (id) on delete set null,
-    birth_date  date not null,
-    status      varchar(50) check (status in ('оставлен', 'обменен', 'отдан'))
+    child_id    int         references animals (id) on delete cascade,
+    parent_id_1 int         references animals (id),
+    parent_id_2 int         references animals (id),
+    birth_date  date        not null check (birth_date <= current_date),
+    status      varchar(50) not null
+        check (status in ('оставлен', 'обменен', 'отдан'))
 );
 
 -- история перемещений по клеткам

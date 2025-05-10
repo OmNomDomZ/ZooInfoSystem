@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class Animal {
     private int id;
 
-    @NotEmpty(message = "Кличка не должна быть пустой")
+    @NotBlank(message = "Кличка не должна быть пустой")
     @Size(min = 2, max = 50, message = "Кличка должна быть от 2 до 50 символов")
     private String nickname;
 
@@ -25,14 +25,17 @@ public class Animal {
     private String gender;
 
     @NotNull(message = "Дата прибытия обязательна")
+    @PastOrPresent(message = "Дата прибытия не может быть в будущем")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate arrivalDate;
 
     private boolean needsWarmHousing;
 
     @NotNull(message = "ID типа животного обязателен")
+    @Positive(message = "ID типа должно быть положительным")
     private Integer animalTypeId;
 
     @NotNull(message = "ID клетки обязателен")
+    @Positive(message = "ID клетки должно быть положительным")
     private Integer cageId;
 }

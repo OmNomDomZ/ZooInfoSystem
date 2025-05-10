@@ -7,11 +7,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import v.rabetsky.dao.AnimalTypeDAO;
 import v.rabetsky.dao.CageDAO;
-import v.rabetsky.models.filters.AnimalFilter;
+import v.rabetsky.dto.AnimalDTO;
+import v.rabetsky.dto.CageDTO;
 import v.rabetsky.models.entities.Animal;
+import v.rabetsky.models.filters.AnimalFilter;
 import v.rabetsky.services.AnimalService;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/zoo/animals")
@@ -33,7 +37,7 @@ public class AnimalsController {
     public String index(AnimalFilter filter, Model model) {
         model.addAttribute("filter",         filter);
         model.addAttribute("animalTypeList", animalTypeDAO.findAll());
-        model.addAttribute("cageList",       cageDAO.findAll());                 
+        model.addAttribute("cageList",       cageDAO.findAllDTO());
         model.addAttribute("animals",        animalService.getAllAnimals(filter));
         return "animals/index";
     }
@@ -48,29 +52,48 @@ public class AnimalsController {
     }
 
     @GetMapping("/new")
-    public String newAnimal(Model model) {
-        model.addAttribute("animal", new Animal());
-        model.addAttribute("cageList", cageDAO.findAll());
-        model.addAttribute("animalTypeList", animalTypeDAO.findAll());
+    public String newAnimal(Model m) {
+        m.addAttribute("animal", new Animal());
+        m.addAttribute("animalTypeList", animalTypeDAO.findAll());
+        m.addAttribute("cageList",       cageDAO.findAllDTO());
+        m.addAttribute("allAnimals",     animalService.getAllAnimals(new AnimalFilter()));
         return "animals/new";
     }
 
     @PostMapping("")
-    public String create(@ModelAttribute @Valid Animal animal,
-                         BindingResult br, Model model) {
+    public String create(@ModelAttribute("animal") @Valid Animal animal,
+                         BindingResult br,
+                         @RequestParam("arrivalType")       String arrivalType,
+                         @RequestParam(value="originZooName", required = false) String originZoo,
+                         @RequestParam(value="parent1Id",     required = false) Integer p1,
+                         @RequestParam(value="parent2Id",     required = false) Integer p2,
+                         Model m) {
+
         if (br.hasErrors()) {
-            model.addAttribute("cageList", cageDAO.findAll());
-            model.addAttribute("animalTypeList", animalTypeDAO.findAll());
+            prepareNewForm(m);
             return "animals/new";
         }
-        int newId = animalService.save(animal);
-        return "redirect:/zoo/animals/" + newId + "/medical/new";
+
+        try {
+            int newId = animalService.saveAnimalWithOrigin(animal, arrivalType, originZoo, p1, p2);
+            return "redirect:/zoo/animals/" + newId + "/medical/new";
+        } catch (RuntimeException ex) {
+            br.reject("", ex.getMessage());
+            prepareNewForm(m);
+            return "animals/new";
+        }
+    }
+
+    private void prepareNewForm(Model m) {
+        m.addAttribute("animalTypeList", animalTypeDAO.findAll());
+        m.addAttribute("cageList",       cageDAO.findAllDTO());
+        m.addAttribute("allAnimals",     animalService.getAllAnimals(new AnimalFilter()));
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable int id, Model model) {
         model.addAttribute("animal", animalService.findById(id));
-        model.addAttribute("cageList", cageDAO.findAll());
+        model.addAttribute("cageList", cageDAO.findAllDTO());
         model.addAttribute("animalTypeList", animalTypeDAO.findAll());
         return "animals/edit";
     }
@@ -85,5 +108,24 @@ public class AnimalsController {
     public String delete(@PathVariable int id) {
         animalService.delete(id);
         return "redirect:/zoo/animals";
+    }
+
+    @GetMapping("/{id}/move")
+    public String moveForm(@PathVariable int id, Model model) {
+        AnimalDTO animal = animalService.findById(id);
+        List<CageDTO> all = cageDAO.findAllDTO();
+        List<CageDTO> options = all.stream()
+                .filter(c -> c.getAnimalTypeName().equals(animal.getAnimalTypeName()))
+                .collect(Collectors.toList());
+        model.addAttribute("animal",       animal);
+        model.addAttribute("cageOptions",  options);
+        return "animals/move";
+    }
+
+    @PostMapping("/{id}/move")
+    public String moveSubmit(@PathVariable int id,
+                             @RequestParam("cageId") int cageId) {
+        animalService.moveCage(id, cageId);
+        return "redirect:/zoo/animals/" + id;
     }
 }

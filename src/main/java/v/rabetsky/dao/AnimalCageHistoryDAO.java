@@ -16,7 +16,7 @@ public class AnimalCageHistoryDAO {
 
     public List<AnimalCageHistory> findByAnimalId(int animalId) {
         return jdbcTemplate.query(
-                "SELECT * FROM animal_cage_history WHERE animal_id = ? ORDER BY start_date DESC",
+                "SELECT * FROM animal_cage_history WHERE animal_id = ? ORDER BY start_date",
                 new BeanPropertyRowMapper<>(AnimalCageHistory.class),
                 animalId
         );

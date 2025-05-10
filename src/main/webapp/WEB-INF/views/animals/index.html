@@ -1,32 +1,30 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Список животных</title>
-    <link rel="stylesheet" th:href="@{/css/animals_style.css}">
+    <link rel="stylesheet" th:href="@{/css/animals_style.css}"/>
 </head>
 <body>
-<header><h1>Список животных</h1></header>
+<header>
+    <h1>Список животных</h1>
+</header>
 <main>
-    <!-- Форма фильтрации -->
     <form class="filter-bar" method="get" th:object="${filter}">
         <h2>Фильтры</h2>
 
-        <!-- 1. Кличка -->
         <label for="nickname">Кличка</label>
         <input id="nickname" type="text" th:field="*{nickname}" placeholder="Часть имени"/>
 
-        <!-- 2. Тип животного -->
         <label for="animalType">Тип</label>
         <select id="animalType" th:field="*{animalTypeIds}">
             <option value="" selected>— Все —</option>
-            <option th:each="type : ${animalTypeList}"
-                    th:value="${type.id}"
-                    th:text="${type.type}">
+            <option th:each="t : ${animalTypeList}"
+                    th:value="${t.id}"
+                    th:text="${t.type}">
             </option>
         </select>
 
-        <!-- 3. Пол -->
         <label for="gender">Пол</label>
         <select id="gender" th:field="*{genders}">
             <option value="" selected>— Все —</option>
@@ -34,21 +32,19 @@
             <option value="женский">женский</option>
         </select>
 
-        <!-- 4. Нуждается в теплом жилье -->
         <label for="needsWarm">Тёплое жильё</label>
-        <select id="needsWarm" th:field="*{needsWarnHousing}">
+        <select id="needsWarm" th:field="*{needsWarmHousing}">
             <option value="" selected>— Все —</option>
             <option th:value="true">Да</option>
             <option th:value="false">Нет</option>
         </select>
 
-        <!-- 5. Клетка -->
         <label for="cage">Клетка</label>
         <select id="cage" th:field="*{cageIds}" multiple>
             <option th:each="c : ${cageList}"
                     th:value="${c.id}"
-                    th:text="'ID ' + ${c.id} + ' (' + ${c.climateZone} + ')'"
-                    th:selected="${filter.cageIds != null and #arrays.contains(filter.cageIds, c.id)}"
+                    th:text="'ID ' + ${c.id} + ' (' + ${c.animalTypeName} + ')'"
+                    th:selected="${filter.cageIds != null and #arrays.contains(filter.cageIds, c.id)}">
             </option>
         </select>
 
@@ -58,7 +54,6 @@
         </div>
     </form>
 
-    <!-- Список животных -->
     <div class="animal-list">
         <div class="employee-card" th:each="animal : ${animals}">
             <a class="employee-link"
@@ -67,10 +62,10 @@
                 Кличка (тип)
             </a>
         </div>
-    </div>
-
-    <div class="add-new">
-        <a th:href="@{/zoo/animals/new}" class="btn">Добавить новое животное</a>
+        <div class="add-new">
+            <a th:href="@{/zoo/animals/new}" class="btn">Добавить новое животное</a>
+            <a th:href="@{/zoo/}" class="btn">Главная страница</a>
+        </div>
     </div>
 </main>
 </body>
