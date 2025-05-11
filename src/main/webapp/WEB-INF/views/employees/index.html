@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Список сотрудников</title>
-    <link rel="stylesheet" th:href="@{/css/employees_style.css}">
+    <link rel="stylesheet" th:href="@{/css/employees_style.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+          rel="stylesheet"/>
 </head>
 <body>
 <header><h1>Список сотрудников</h1></header>
-<main>
+<main class="container">
+
+    <!-- Фильтры -->
     <form class="filter-bar" method="get" th:object="${filter}">
         <h2>Фильтры</h2>
-
         <label for="fullName">ФИО</label>
         <input id="fullName" type="text" th:field="*{fullName}" placeholder="Часть имени"/>
 
@@ -19,8 +24,7 @@
             <option value="" selected>— Все —</option>
             <option th:each="pos : ${positionsList}"
                     th:value="${pos.id}"
-                    th:text="${pos.title}">
-            </option>
+                    th:text="${pos.title}"></option>
         </select>
 
         <label for="gender">Пол</label>
@@ -36,19 +40,24 @@
         </div>
     </form>
 
-    <div class="employee-list">
-        <div class="employee-card" th:each="emp : ${employees}">
-            <a class="employee-link"
-               th:href="@{/zoo/employees/{id}(id=${emp.id})}"
-               th:text="${emp.fullName} + ', ' + ${emp.positionName}">
-                ФИО, должность
-            </a>
-        </div>
-        <div class="add-new">
-            <a th:href="@{/zoo/employees/new}" class="btn">Добавить новую запись</a>
-            <a th:href="@{/zoo/}" class="btn">Главная страница</a>
-        </div>
+    <!-- Список карточек -->
+    <div class="card-list">
+        <a th:each="emp : ${employees}"
+           th:href="@{/zoo/employees/{id}(id=${emp.id})}"
+           class="card-link">
+            <div class="card">
+                <div class="card-header" th:text="${emp.fullName}">Иван Петров</div>
+                <div class="card-body" th:text="${emp.positionName}">ветеринар</div>
+            </div>
+        </a>
     </div>
+
+    <!-- Действия -->
+    <div class="filter-buttons">
+        <a th:href="@{/zoo/employees/new}" class="btn">Добавить нового</a>
+        <a th:href="@{/zoo/}" class="btn">Главная</a>
+    </div>
+
 </main>
 </body>
 </html>

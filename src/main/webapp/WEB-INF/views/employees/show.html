@@ -4,33 +4,37 @@
     <meta charset="UTF-8"/>
     <title>Детали сотрудника</title>
     <link rel="stylesheet" th:href="@{/css/employees_style.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+          rel="stylesheet"/>
 </head>
 <body>
-<header>
-    <h1>Детали сотрудника</h1>
-</header>
-<main>
-    <!-- Карточка с базовой информацией -->
-    <div class="employee-info">
-        <p><b>Полное имя:</b> [[${employee.fullName}]]</p>
-        <p><b>Пол:</b> [[${employee.gender}]]</p>
-        <p><b>Дата найма:</b> [[${employee.hireDate}]]</p>
-        <p><b>Дата рождения:</b> [[${employee.birthDate}]]</p>
-        <p><b>Должность:</b> [[${employee.positionName}]]</p>
-        <p><b>Зарплата:</b> [[${employee.salary}]]</p>
-        <p><b>Контакты:</b> [[${employee.contactInfo}]]</p>
-        <p><b>Special attributes:</b> [[${employee.specialAttributes}]]</p>
+<header><h1>Детали сотрудника</h1></header>
+<main class="container">
 
-        <div class="buttons">
+    <!-- Основная карточка -->
+    <section class="card employee-info">
+        <div class="card-body">
+            <p><b>Полное имя:</b> [[${employee.fullName}]]</p>
+            <p><b>Пол:</b> [[${employee.gender}]]</p>
+            <p><b>Дата найма:</b> [[${employee.hireDate}]]</p>
+            <p><b>Дата рождения:</b> [[${employee.birthDate}]]</p>
+            <p><b>Должность:</b> [[${employee.positionName}]]</p>
+            <p><b>Зарплата:</b> [[${employee.salary}]]</p>
+            <p><b>Контакты:</b> [[${employee.contactInfo}]]</p>
+            <p><b>Special attributes:</b> [[${employee.specialAttributes}]]</p>
+        </div>
+        <div class="card-footer">
             <a th:href="@{/zoo/employees/{id}/edit(id=${employee.id})}" class="btn">Редактировать</a>
             <form th:action="@{/zoo/employees/{id}(id=${employee.id})}" th:method="delete" style="display:inline">
                 <button class="btn btn-danger">Удалить</button>
             </form>
+            <a th:href="@{/zoo/employees}" class="btn">Назад</a>
         </div>
-        <a th:href="@{/zoo/employees}" class="btn">Назад к списку</a>
-    </div>
+    </section>
 
-    <!-- Секция: работает с видами животных -->
+    <!-- Таблица: работает с животными -->
     <section>
         <h2>Работает с животными</h2>
         <table>
@@ -66,7 +70,7 @@
         </table>
     </section>
 
-    <!-- Секция: доступ к клеткам -->
+    <!-- Таблица: доступ к клеткам -->
     <section>
         <h2>Доступ к клеткам</h2>
         <table>
@@ -102,6 +106,7 @@
             </tfoot>
         </table>
     </section>
+
 </main>
 </body>
 </html>

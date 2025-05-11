@@ -1,68 +1,79 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Редактирование сотрудника</title>
-    <link rel="stylesheet" th:href="@{/css/employees_style.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8"/>
+    <title>Редактировать сотрудника</title>
+    <link rel="stylesheet" th:href="@{/css/employees_style.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+          rel="stylesheet"/>
 </head>
 <body>
-<header>
-    <h1>Редактирование сотрудника</h1>
-</header>
-<main>
-    <form th:method="PATCH" th:action="@{/zoo/employees/{id}(id=${employee.getId()})}" th:object="${employee}">
-        <label for="full_name">Полное имя:</label>
-        <input type="text" th:field="*{fullName}" id="full_name"/>
-        <div style="color:red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
-        <br/>
+<header><h1>Редактировать сотрудника</h1></header>
+<main class="container">
 
-        <label for="gender">Пол:</label>
-        <select th:field="*{gender}" id="gender">
-            <option value="мужской">мужской</option>
-            <option value="женский">женский</option>
-        </select>
-        <div style="color:red" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
-        <br/>
+    <form th:action="@{/zoo/employees/{id}(id=${employee.id})}"
+          th:method="patch"
+          th:object="${employee}"
+          class="edit-form">
 
-        <label for="birth_date">Дата рождения:</label>
-        <input type="date" th:field="*{birthDate}" id="birth_date"/>
-        <div style="color:red" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
-        <br/>
+        <div class="form-row">
+            <label for="fullName">Полное имя:</label>
+            <input type="text" th:field="*{fullName}" id="fullName"/>
+            <div class="error" th:errors="*{fullName}"></div>
+        </div>
 
-        <label for="hire_date">Дата найма:</label>
-        <input type="date" th:field="*{hireDate}" id="hire_date"/>
-        <div style="color:red" th:if="${#fields.hasErrors('hireDate')}" th:errors="*{hireDate}"></div>
-        <br/>
+        <div class="form-row">
+            <label for="gender">Пол:</label>
+            <select th:field="*{gender}" id="gender">
+                <option value="мужской">мужской</option>
+                <option value="женский">женский</option>
+            </select>
+            <div class="error" th:errors="*{gender}"></div>
+        </div>
 
-        <label for="position_id">Должность:</label>
-        <select th:field="*{positionId}" id="position_id">
-            <option value="" disabled selected>Выберите должность</option>
-            <option th:each="pos : ${positionsList}"
-                    th:value="${pos.id}"
-                    th:text="${pos.title}">
-            </option>
-        </select>
-        <div style="color:red"
-             th:if="${#fields.hasErrors('positionId')}"
-             th:errors="*{positionId}"></div>
-        <br/>
+        <div class="form-row">
+            <label for="birthDate">Дата рождения:</label>
+            <input type="date" th:field="*{birthDate}" id="birthDate"/>
+            <div class="error" th:errors="*{birthDate}"></div>
+        </div>
 
-        <label for="salary">Зарплата:</label>
-        <input type="number" step="1" th:field="*{salary}" id="salary"/>
-        <div style="color:red" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></div>
-        <br/>
+        <div class="form-row">
+            <label for="hireDate">Дата найма:</label>
+            <input type="date" th:field="*{hireDate}" id="hireDate"/>
+            <div class="error" th:errors="*{hireDate}"></div>
+        </div>
 
-        <label for="contact_info">Контактная информация (email или телефон):</label>
-        <input type="text" th:field="*{contactInfo}" id="contact_info"/>
-        <div th:if="${#fields.hasErrors('contactInfo')}" th:errors="*{contactInfo}"></div>
-        <br/>
+        <div class="form-row">
+            <label for="positionId">Должность:</label>
+            <select th:field="*{positionId}" id="positionId">
+                <option value="" disabled selected>— Выберите —</option>
+                <option th:each="pos : ${positionsList}"
+                        th:value="${pos.id}"
+                        th:text="${pos.title}"></option>
+            </select>
+            <div class="error" th:errors="*{positionId}"></div>
+        </div>
 
-        <input type="submit" value="Обновить!" class="btn">
-        <a th:href="@{/zoo/employees/{id}(id=${employee.id})}" class="btn">Отмена</a>
+        <div class="form-row">
+            <label for="salary">Зарплата:</label>
+            <input type="number" step="1" th:field="*{salary}" id="salary"/>
+            <div class="error" th:errors="*{salary}"></div>
+        </div>
+
+        <div class="form-row">
+            <label for="contactInfo">Контакты:</label>
+            <input type="text" th:field="*{contactInfo}" id="contactInfo"/>
+            <div class="error" th:errors="*{contactInfo}"></div>
+        </div>
+
+        <div>
+            <button type="submit" class="btn">Сохранить</button>
+            <a th:href="@{/zoo/employees/{id}(id=${employee.id})}" class="btn">Отмена</a>
+        </div>
     </form>
+
 </main>
 </body>
 </html>
