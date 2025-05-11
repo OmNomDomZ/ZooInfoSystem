@@ -18,6 +18,7 @@ public class SupplierFood {
     private Integer foodId;
 
     @NotNull(message = "Дата доставки обязательна")
+    @PastOrPresent(message = "Дата доставки не может быть в будущем")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deliveryDate;
 

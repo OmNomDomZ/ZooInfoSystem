@@ -1,82 +1,89 @@
-/* Базовые стили */
-body {
+/* общий сброс и фон */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
     font-family: 'Roboto', sans-serif;
     background: #f4f7f9;
     color: #333;
+
+    /* flex-контейнер для центровки всего страницы */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    /* для анимации появления */
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
 }
 
-/* Стили ссылок сотрудников */
-.employee-link {
-    text-decoration: none;
-    color: #2d3a4e;
-    font-size: 1.1em;
-    -webkit-tap-highlight-color: transparent; /* mobile tap */
+body.loaded {
+    opacity: 1;
 }
 
-/* Не даём браузеру окрасить “посещённую” ссылку в фиолетовый */
-.employee-link:visited {
-    color: #2d3a4e;
-    text-decoration: none;
-}
-
+/* header остаётся на всю ширину, но контент внутри уже центрирован */
 header {
+    width: 100%;
     background: #2d3a4e;
     padding: 20px;
     text-align: center;
     color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 header h1 {
-    margin: 0;
     font-size: 2.5em;
 }
 
+/* главной контейнер (main) даём ограничение по ширине и центрируем его */
 main {
-    padding: 40px 20px;
-}
-
-/* Контейнер для списка сотрудников */
-.employee-list {
+    width: 100%;
     max-width: 800px;
-    margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Стили карточек сотрудников */
-.employee-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 15px;
+/* карточка сотрудника */
+.employee-info {
+    width: 100%;
+    background: #fff;
+    padding: 25px;
     border-radius: 8px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+    text-align: center; /* центрируем текст внутри */
+    transform: translateY(20px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.employee-card:hover {
-    background-color: #f9f9f9;
+.employee-info:hover {
+    transform: translateY(0);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
-/* Стили ссылок сотрудников */
-.employee-link {
-    text-decoration: none;
-    color: #2d3a4e;
-    font-size: 1.1em;
+.employee-info p {
+    margin: 10px 0;
 }
 
-.employee-link:hover {
-    text-decoration: underline;
+.employee-info .buttons {
+    margin-top: 20px;
 }
 
-/* Контейнер для кнопки добавления */
-.add-new {
-    max-width: 800px;
-    margin: 20px auto;
-    text-align: center;
+.employee-info .buttons .btn {
+    margin: 0 8px;
 }
 
-/* Стили кнопки */
+/* кнопки */
 .btn {
     display: inline-block;
     background-color: #2d3a4e;
@@ -85,11 +92,62 @@ main {
     border: none;
     border-radius: 6px;
     text-decoration: none;
-    font-size: 1em;
+    font-size: 0.95em;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn:hover {
     background-color: #1c2533;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: #c0392b;
+}
+
+.btn-danger:hover {
+    background-color: #922b21;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.85em;
+}
+
+/* заголовки секций */
+section h2 {
+    margin: 50px 0 20px;
+    color: #2d3a4e;
+    text-align: center;
+}
+
+/* таблицы */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    background: #fff;
+}
+
+table th {
+    background: #f0f0f0;
+    font-weight: 600;
+}
+
+/* стили селектов для лучшего вида */
+select {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 0.9em;
 }

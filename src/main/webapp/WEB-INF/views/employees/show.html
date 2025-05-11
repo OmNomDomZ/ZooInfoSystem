@@ -1,32 +1,107 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Детали сотрудника</title>
-    <link rel="stylesheet" th:href="@{/css/employees_style.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/employees_style.css}"/>
 </head>
 <body>
 <header>
     <h1>Детали сотрудника</h1>
 </header>
 <main>
-    <p th:text="'Полное имя: ' + ${employee.getFullName()}"></p>
-    <p th:text="'Пол: ' + ${employee.getGender()}"></p>
-    <p th:text="'Дата найма: ' + ${employee.getHireDate()}"></p>
-    <p th:text="'Дата рождения: ' + ${employee.getBirthDate()}"></p>
-    <p th:text="'Должность: ' + ${employee.getPositionName()}"></p>
-    <p th:text="'Зарплата: ' + ${employee.getSalary()}"></p>
-    <p th:text="'Контактная информация: ' + ${employee.getContactInfo()}"></p>
-    <p th:text="'Special attributes: ' + ${employee.getSpecialAttributes()}"></p>
+    <!-- Карточка с базовой информацией -->
+    <div class="employee-info">
+        <p><b>Полное имя:</b> [[${employee.fullName}]]</p>
+        <p><b>Пол:</b> [[${employee.gender}]]</p>
+        <p><b>Дата найма:</b> [[${employee.hireDate}]]</p>
+        <p><b>Дата рождения:</b> [[${employee.birthDate}]]</p>
+        <p><b>Должность:</b> [[${employee.positionName}]]</p>
+        <p><b>Зарплата:</b> [[${employee.salary}]]</p>
+        <p><b>Контакты:</b> [[${employee.contactInfo}]]</p>
+        <p><b>Special attributes:</b> [[${employee.specialAttributes}]]</p>
 
-    <a th:href="@{/zoo/employees/{id}/edit(id=${employee.getId()})}" class="btn">Редактировать</a>
+        <div class="buttons">
+            <a th:href="@{/zoo/employees/{id}/edit(id=${employee.id})}" class="btn">Редактировать</a>
+            <form th:action="@{/zoo/employees/{id}(id=${employee.id})}" th:method="delete" style="display:inline">
+                <button class="btn btn-danger">Удалить</button>
+            </form>
+        </div>
+        <a th:href="@{/zoo/employees}" class="btn">Назад к списку</a>
+    </div>
 
-    <form th:method="DELETE" th:action="@{/zoo/employees/{id}(id=${employee.getId()})}">
-        <input type="submit" value="Удалить!" class="btn">
-    </form>
+    <!-- Секция: работает с видами животных -->
+    <section>
+        <h2>Работает с животными</h2>
+        <table>
+            <thead>
+            <tr><th>Вид</th><th>Действие</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="at : ${assignedAnimalTypes}">
+                <td>[[${at.type}]]</td>
+                <td>
+                    <form th:action="@{/zoo/employees/{id}/animal-types/{atypeId}/delete(id=${employee.id},atypeId=${at.id})}"
+                          method="post">
+                        <button class="btn btn-small">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <form th:action="@{/zoo/employees/{id}/animal-types(id=${employee.id})}" method="post">
+                    <td>
+                        <select name="animalTypeId">
+                            <option value="" disabled selected>Выберите вид</option>
+                            <option th:each="opt : ${allAnimalTypes}"
+                                    th:value="${opt.id}"
+                                    th:text="${opt.type}"></option>
+                        </select>
+                    </td>
+                    <td><button class="btn btn-small">Добавить</button></td>
+                </form>
+            </tr>
+            </tfoot>
+        </table>
+    </section>
+
+    <!-- Секция: доступ к клеткам -->
+    <section>
+        <h2>Доступ к клеткам</h2>
+        <table>
+            <thead>
+            <tr><th>Клетка ID</th><th>Вид животного</th><th>Действие</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${assignedCages}">
+                <td>[[${c.id}]]</td>
+                <td>[[${c.animalTypeName}]]</td>
+                <td>
+                    <form th:action="@{/zoo/employees/{id}/cages/{cageId}/delete(id=${employee.id},cageId=${c.id})}"
+                          method="post">
+                        <button class="btn btn-small">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <form th:action="@{/zoo/employees/{id}/cages(id=${employee.id})}" method="post">
+                    <td colspan="2">
+                        <select name="cageId">
+                            <option value="" disabled selected>Выберите клетку</option>
+                            <option th:each="opt : ${allCages}"
+                                    th:value="${opt.id}"
+                                    th:text="${opt.id + ' (вид: ' + opt.animalTypeName + ')'}"></option>
+                        </select>
+                    </td>
+                    <td><button class="btn btn-small">Добавить</button></td>
+                </form>
+            </tr>
+            </tfoot>
+        </table>
+    </section>
 </main>
 </body>
 </html>

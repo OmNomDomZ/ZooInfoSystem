@@ -33,6 +33,7 @@ public class CageDAO {
     public List<CageDTO> findAllDTO() {
         return jdbc.query("""
                         SELECT c.id,
+                               c.animal_type_id,
                                at.type AS animal_type_name,
                                c.capacity
                           FROM cages c
@@ -41,6 +42,7 @@ public class CageDAO {
                         """,
                 (rs, rowNum) -> new CageDTO(
                         rs.getInt("id"),
+                        rs.getInt("animal_type_id"),
                         rs.getString("animal_type_name"),
                         rs.getInt("capacity")
                 ));

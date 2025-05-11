@@ -47,6 +47,14 @@ public class EmployeesController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("employee", employeeService.findById(id));
+        model.addAttribute("assignedAnimalTypes",
+                employeeService.getAssignedAnimalTypes(id));
+        model.addAttribute("assignedCages",
+                employeeService.getAssignedCages(id));
+        model.addAttribute("allAnimalTypes",
+                employeeService.getAllAnimalTypes());
+        model.addAttribute("allCages",
+                employeeService.getAllCages());
         return "employees/show";
     }
 
@@ -82,12 +90,40 @@ public class EmployeesController {
         }
 
         employeeService.update(id, employee);
-        return "redirect:/zoo/employees";
+        return "redirect:/zoo/employees/" + id;
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         employeeService.delete(id);
         return "redirect:/zoo/employees";
+    }
+
+    @PostMapping("/{id}/animal-types")
+    public String addAnimalType(@PathVariable int id,
+                                @RequestParam("animalTypeId") int animalTypeId) {
+        employeeService.addAnimalTypeToEmployee(id, animalTypeId);
+        return "redirect:/zoo/employees/" + id;
+    }
+
+    @PostMapping("/{id}/animal-types/{atypeId}/delete")
+    public String deleteAnimalType(@PathVariable int id,
+                                   @PathVariable("atypeId") int atypeId) {
+        employeeService.removeAnimalTypeFromEmployee(id, atypeId);
+        return "redirect:/zoo/employees/" + id;
+    }
+
+    @PostMapping("/{id}/cages")
+    public String addCageAccess(@PathVariable int id,
+                                @RequestParam("cageId") int cageId) {
+        employeeService.addCageAccessToEmployee(id, cageId);
+        return "redirect:/zoo/employees/" + id;
+    }
+
+    @PostMapping("/{id}/cages/{cageId}/delete")
+    public String deleteCageAccess(@PathVariable int id,
+                                   @PathVariable int cageId) {
+        employeeService.removeCageAccessFromEmployee(id, cageId);
+        return "redirect:/zoo/employees/" + id;
     }
 }

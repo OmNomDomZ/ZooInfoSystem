@@ -1,25 +1,38 @@
 package v.rabetsky.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import v.rabetsky.dao.EmployeeAnimalTypeDAO;
+import v.rabetsky.dao.EmployeeCageAccessDAO;
 import v.rabetsky.dao.EmployeeDAO;
 import v.rabetsky.dao.PositionDAO;
+import v.rabetsky.dto.CageDTO;
 import v.rabetsky.dto.EmployeeDTO;
+import v.rabetsky.models.entities.AnimalType;
 import v.rabetsky.models.entities.Employee;
-import v.rabetsky.models.filters.EmployeeFilter;
 import v.rabetsky.models.entities.Position;
+import v.rabetsky.models.filters.EmployeeFilter;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class EmployeeService {
     private final EmployeeDAO employeeDAO;
     private final PositionDAO positionDAO;
+    private final EmployeeCageAccessDAO employeeCageAccessDAO;
+    private final EmployeeAnimalTypeDAO employeeAnimalTypeDAO;
 
-    public EmployeeService(EmployeeDAO employeeDAO, PositionDAO positionDAO) {
+    public EmployeeService(EmployeeDAO employeeDAO,
+                           PositionDAO positionDAO,
+                           EmployeeCageAccessDAO employeeCageAccessDAO,
+                           EmployeeAnimalTypeDAO employeeAnimalTypeDAO) {
         this.employeeDAO = employeeDAO;
         this.positionDAO = positionDAO;
+        this.employeeCageAccessDAO = employeeCageAccessDAO;
+        this.employeeAnimalTypeDAO = employeeAnimalTypeDAO;
     }
 
     public List<EmployeeDTO> findAllWithPositionName(EmployeeFilter filter) {
@@ -63,10 +76,6 @@ public class EmployeeService {
                 .build();
     }
 
-    public Employee show(int id) {
-        return employeeDAO.show(id);
-    }
-
     public void save(Employee employee) {
         employeeDAO.save(employee);
     }
@@ -80,4 +89,30 @@ public class EmployeeService {
     }
 
 
+    public List<AnimalType> getAssignedAnimalTypes(int empId) {
+        return employeeAnimalTypeDAO.findAnimalTypesByEmployee(empId);
+    }
+    public List<CageDTO> getAssignedCages(int empId) {
+        return employeeCageAccessDAO.findCagesByEmployee(empId);
+    }
+
+    public List<AnimalType> getAllAnimalTypes() {
+        return employeeAnimalTypeDAO.findAllAnimalTypes();
+    }
+    public List<CageDTO> getAllCages() {
+        return employeeCageAccessDAO.findAllCages();
+    }
+
+    public void addAnimalTypeToEmployee(int empId, int animalTypeId) {
+        employeeAnimalTypeDAO.add(empId, animalTypeId);
+    }
+    public void removeAnimalTypeFromEmployee(int empId, int animalTypeId) {
+        employeeAnimalTypeDAO.remove(empId, animalTypeId);
+    }
+    public void addCageAccessToEmployee(int empId, int cageId) {
+        employeeCageAccessDAO.add(empId, cageId);
+    }
+    public void removeCageAccessFromEmployee(int empId, int cageId) {
+        employeeCageAccessDAO.remove(empId, cageId);
+    }
 }

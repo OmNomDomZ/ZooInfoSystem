@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CageDTO {
     private int id;
+    private int animalTypeId;
     private String animalTypeName;
     private int capacity;
 }

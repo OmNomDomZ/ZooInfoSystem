@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import v.rabetsky.annotations.DateRange;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@DateRange(start="birthDate", end="hireDate",
+        message="Дата рождения не должна быть позже даты найма")
 public class Employee {
     private int id;
 
@@ -26,10 +29,12 @@ public class Employee {
     private String gender;
 
     @NotNull(message = "Дата найма обязательна")
+    @PastOrPresent(message = "Дата найма не может быть в будущем")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
 
     @NotNull(message = "Дата рождения обязательна")
+    @Past(message = "Дата рождения должна быть в прошлом")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
