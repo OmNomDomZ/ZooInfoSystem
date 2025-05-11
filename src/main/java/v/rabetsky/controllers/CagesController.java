@@ -68,8 +68,13 @@ public class CagesController {
         if (br.hasErrors()) {
             return index(model);
         }
-        // form.animalId, form.newCageId
-        cageService.moveAnimal(form.getAnimalId(), form.getNewCageId());
+
+        try {
+            cageService.moveAnimal(form.getAnimalId(), form.getNewCageId());
+        } catch (RuntimeException ex) {
+            model.addAttribute("deleteError", ex.getMessage());
+            return index(model);
+        }
         return "redirect:/zoo/cages";
     }
 }

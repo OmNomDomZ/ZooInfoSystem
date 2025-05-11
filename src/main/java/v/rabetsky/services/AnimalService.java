@@ -2,6 +2,7 @@ package v.rabetsky.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import v.rabetsky.dao.*;
 import v.rabetsky.dto.AnimalDTO;
 import v.rabetsky.dto.BirthRecordDTO;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class AnimalService {
     private final AnimalDAO animalDAO;
     private final AnimalTypeDAO animalTypeDAO;
@@ -103,6 +105,7 @@ public class AnimalService {
                 .build();
     }
 
+    @Transactional
     public void update(int id, Animal animal) {
         validateUpdate(animal);
         animalDAO.update(id, animal);
@@ -126,6 +129,7 @@ public class AnimalService {
         }
     }
 
+    @Transactional
     public void delete(int id) {
         animalDAO.delete(id);
     }
@@ -152,6 +156,7 @@ public class AnimalService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public int saveAnimalWithOrigin(Animal animal,
                                     String arrivalType,
                                     String originZooName,
@@ -224,6 +229,7 @@ public class AnimalService {
         }
     }
 
+    @Transactional
     public void moveCage(int animalId, int newCageId) {
         animalDAO.updateCage(animalId, newCageId);
     }

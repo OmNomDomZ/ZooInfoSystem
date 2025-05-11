@@ -117,10 +117,11 @@ header h1 {
 
 /* Сообщение об ошибке удаления */
 .error-msg {
-    background: #fdecea;
-    color: #c0392b;
-    padding: 12px;
+    background: #fdecea;       /* светло-красный фон */
+    color: #c0392b;            /* тёмно-красный текст */
+    padding: 12px 16px;
     border-radius: 6px;
     margin-bottom: 20px;
     text-align: center;
+    font-weight: 500;
 }

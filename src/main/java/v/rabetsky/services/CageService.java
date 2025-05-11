@@ -55,6 +55,10 @@ public class CageService {
 
     @Transactional
     public void moveAnimal(int animalId, int newCageId) {
+        if (animalDAO.show(animalId).getAnimalTypeId() != cageDAO.findById(newCageId).getAnimalTypeId()) {
+            throw new RuntimeException("Животное не может быть перемещено в клетку не своего типа");
+        }
+
         animalDAO.moveToCage(animalId, newCageId);
     }
 

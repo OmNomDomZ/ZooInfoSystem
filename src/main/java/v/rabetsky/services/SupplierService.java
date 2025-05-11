@@ -1,6 +1,7 @@
 package v.rabetsky.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import v.rabetsky.dao.*;
 import v.rabetsky.dto.*;
 import v.rabetsky.models.filters.SupplierFilter;
@@ -9,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class SupplierService {
     private final SupplierDAO supplierDAO;
     private final SupplierFoodDAO supplierFoodDAO;
@@ -68,23 +70,34 @@ public class SupplierService {
     public Supplier findSupplier(int id) {
         return supplierDAO.findById(id);
     }
+
+    @Transactional
     public void saveSupplier(Supplier s) {
         supplierDAO.save(s);
     }
+
+    @Transactional
     public void updateSupplier(int id, Supplier s) {
         supplierDAO.update(id, s);
     }
+
+    @Transactional
     public void deleteSupplier(int id) {
         supplierDAO.delete(id);
     }
 
     /** CRUD доставок */
+    @Transactional
     public void addDelivery(SupplierFood sf) {
         supplierFoodDAO.save(sf);
     }
+
+    @Transactional
     public void updateDelivery(int id, SupplierFood sf) {
         supplierFoodDAO.update(id, sf);
     }
+
+    @Transactional
     public void deleteDelivery(int id) {
         supplierFoodDAO.delete(id);
     }

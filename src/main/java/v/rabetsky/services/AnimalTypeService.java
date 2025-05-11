@@ -1,6 +1,7 @@
 package v.rabetsky.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import v.rabetsky.dao.AnimalDAO;
 import v.rabetsky.dao.AnimalTypeDAO;
 import v.rabetsky.dao.DietTypeDAO;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @Service
 public class AnimalTypeService {
     private final AnimalTypeDAO animalTypeDAO;
@@ -40,10 +42,12 @@ public class AnimalTypeService {
         return dietTypeDAO.findAll();
     }
 
+    @Transactional
     public void addType(String type, int dietTypeId) {
         animalTypeDAO.save(type, dietTypeId);
     }
 
+    @Transactional
     public void deleteType(int id) {
         if (animalTypeDAO.hasAnimals(id)) {
             throw new IllegalStateException("Нельзя удалить вид, к которому привязаны животные");

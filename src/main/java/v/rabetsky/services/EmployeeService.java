@@ -2,6 +2,7 @@ package v.rabetsky.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import v.rabetsky.dao.EmployeeAnimalTypeDAO;
 import v.rabetsky.dao.EmployeeCageAccessDAO;
 import v.rabetsky.dao.EmployeeDAO;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class EmployeeService {
     private final EmployeeDAO employeeDAO;
     private final PositionDAO positionDAO;
@@ -76,14 +78,17 @@ public class EmployeeService {
                 .build();
     }
 
+    @Transactional
     public void save(Employee employee) {
         employeeDAO.save(employee);
     }
 
+    @Transactional
     public void update(int id, Employee employee) {
         employeeDAO.update(id, employee);
     }
 
+    @Transactional
     public void delete(int id) {
         employeeDAO.delete(id);
     }
@@ -103,15 +108,22 @@ public class EmployeeService {
         return employeeCageAccessDAO.findAllCages();
     }
 
+    @Transactional
     public void addAnimalTypeToEmployee(int empId, int animalTypeId) {
         employeeAnimalTypeDAO.add(empId, animalTypeId);
     }
+
+    @Transactional
     public void removeAnimalTypeFromEmployee(int empId, int animalTypeId) {
         employeeAnimalTypeDAO.remove(empId, animalTypeId);
     }
+
+    @Transactional
     public void addCageAccessToEmployee(int empId, int cageId) {
         employeeCageAccessDAO.add(empId, cageId);
     }
+
+    @Transactional
     public void removeCageAccessFromEmployee(int empId, int cageId) {
         employeeCageAccessDAO.remove(empId, cageId);
     }
