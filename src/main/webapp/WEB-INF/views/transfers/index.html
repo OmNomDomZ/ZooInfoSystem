@@ -1,0 +1,36 @@
+<!-- templates/transfers/index.html -->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Перемещения животных</title>
+    <link rel="stylesheet" th:href="@{/css/transfers_style.css}"/>
+</head>
+<body>
+<header><h1>Перемещения животных</h1></header>
+<main class="container">
+    <div class="filter-buttons">
+        <a th:href="@{/zoo/transfers/new}" class="btn">Новое перемещение</a>
+        <a th:href="@{/zoo/}" class="btn">Главная</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Животное</th>
+            <th>Зоопарк</th>
+            <th>Причина</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="t : ${transfers}">
+            <td th:text="${t.transferDate}">2025-05-11</td>
+            <td th:text="${t.nickname}">Мурзик</td>
+            <td th:text="${t.zooName != null ? t.zooName : '—'}">Воронежский</td>
+            <td th:text="${t.reason}">Передача</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

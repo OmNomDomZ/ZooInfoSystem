@@ -4,9 +4,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import v.rabetsky.models.entities.Zoo;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Component
 public class ZooDAO {
@@ -21,6 +23,18 @@ public class ZooDAO {
      * Ищет зоопарк по имени (case-insensitive), либо создаёт новый
      * (address и contacts оставляем NULL).
      */
+    public List<Zoo> findAll() {
+        String sql = "SELECT id, name, address, contacts FROM zoos ORDER BY name";
+        return jdbc.query(sql,
+                (rs, rowNum) -> {
+                    Zoo z = new Zoo();
+                    z.setId(rs.getInt("id"));
+                    z.setName(rs.getString("name"));
+                    // при желании можно вернуть адрес/контакты
+                    return z;
+                });
+    }
+
     public int getOrCreateZoo(String name) {
         Integer id = jdbc.queryForObject(
                 "SELECT id FROM zoos WHERE lower(name)=lower(?)",

@@ -7,58 +7,80 @@
 </head>
 <body>
 <header>
-    <h1 th:text="${supplier.name}">Поставщик</h1>
-    <p th:text="'Контакты: ' + ${supplier.contacts}"/>
-    <a th:href="@{/zoo/suppliers/{id}/edit(id=${supplier.id})}" class="btn">Редактировать</a>
-    <form th:method="delete" th:action="@{/zoo/suppliers/{id}(id=${supplier.id})}" style="display:inline">
-        <button class="btn">Удалить</button>
-    </form>
+    <div class="container">
+        <h1 th:text="${supplier.name}">Поставщик</h1>
+        <p th:text="'Контакты: ' + ${supplier.contacts}">Контакты</p>
+    </div>
 </header>
-<main class="details">
+
+<main class="container details">
+    <!-- Кнопка «К списку» -->
+    <div class="nav-back">
+        <a th:href="@{/zoo/suppliers}" class="btn back-btn">← К списку поставщиков</a>
+    </div>
+
+    <!-- Таблица истории доставок -->
     <h2>История доставок</h2>
-    <table>
+    <table class="deliveries-table">
         <thead>
         <tr>
-            <th>Продукт</th><th>Тип</th><th>Внутренний</th><th>Дата</th><th>Кол-во</th><th>Цена</th><th>Действия</th>
+            <th>Продукт</th>
+            <th>Тип</th>
+            <th>Внутренний</th>
+            <th>Дата</th>
+            <th>Кол-во</th>
+            <th>Цена</th>
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="d : ${deliveries}">
-            <td th:text="${d.foodName}"/>
-            <td th:text="${d.foodTypeName}"/>
-            <td th:text="${d.producedInternally ? 'Да' : 'Нет'}"/>
-            <td th:text="${d.deliveryDate}"/>
-            <td th:text="${d.quantity}"/>
-            <td th:text="${d.price}"/>
+            <td th:text="${d.foodName}"></td>
+            <td th:text="${d.foodTypeName}"></td>
+            <td th:text="${d.producedInternally ? 'Да' : 'Нет'}"></td>
+            <td th:text="${d.deliveryDate}"></td>
+            <td th:text="${d.quantity}"></td>
+            <td th:text="${d.price}"></td>
             <td>
                 <form th:method="delete"
-                      th:action="@{/zoo/suppliers/{supId}/deliveries/{delId}(supId=${supplier.id},delId=${d.id})}" style="display:inline">
-                    <button class="btn">Удалить</button>
+                      th:action="@{/zoo/suppliers/{supId}/deliveries/{delId}(supId=${supplier.id},delId=${d.id})}"
+                      style="display:inline">
+                    <button class="btn btn-sm btn-danger">Удалить</button>
                 </form>
             </td>
         </tr>
         </tbody>
     </table>
 
+    <!-- Форма добавления новой доставки -->
     <h3>Добавить доставку</h3>
     <form th:method="post"
           th:action="@{/zoo/suppliers/{id}/deliveries(id=${supplier.id})}"
-          th:object="${newDelivery}">
-        <label>Продукт:</label>
-        <select th:field="*{foodId}">
-            <option value="" disabled selected>Выберите</option>
-            <option th:each="f: ${foodList}"
-                    th:value="${f.id}"
-                    th:text="${f.name}"/>
-        </select>
-        <label>Дата:</label>
-        <input type="date" th:field="*{deliveryDate}"/>
-        <label>Кол-во:</label>
-        <input type="number" step="0.01" th:field="*{quantity}"/>
-        <label>Цена:</label>
-        <input type="number" step="0.01" th:field="*{price}"/>
+          th:object="${newDelivery}"
+          class="add-delivery-form">
+        <label>Продукт:
+            <select th:field="*{foodId}">
+                <option value="" disabled selected>Выберите</option>
+                <option th:each="f: ${foodList}"
+                        th:value="${f.id}"
+                        th:text="${f.name}">Продукт</option>
+            </select>
+        </label>
+        <label>Дата:
+            <input type="date" th:field="*{deliveryDate}"/>
+        </label>
+        <label>Кол-во:
+            <input type="number" step="0.01" th:field="*{quantity}"/>
+        </label>
+        <label>Цена:
+            <input type="number" step="0.01" th:field="*{price}"/>
+        </label>
         <button type="submit" class="btn">Добавить</button>
     </form>
 </main>
+
+<footer class="container">
+    <a href="javascript:history.back()" class="btn back-btn">← Назад</a>
+</footer>
 </body>
 </html>

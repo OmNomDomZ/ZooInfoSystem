@@ -1,0 +1,92 @@
+/* transfers_style.css */
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
+    font-family: Arial, sans-serif;
+}
+
+header h1 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    text-align: center;
+}
+
+.filter-buttons {
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.filter-buttons .btn {
+    padding: 8px 12px;
+    margin-left: 5px;
+    background: #2c3e50;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filter-buttons .btn:hover {
+    background: #1a242f;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table thead {
+    background: #ecf0f1;
+}
+
+table th,
+table td {
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    text-align: left;
+    font-size: 14px;
+}
+
+table tbody tr:nth-child(odd) {
+    background: #f9f9f9;
+}
+
+.form-row {
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-row select,
+.form-row input[type="date"],
+.form-row textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #27ae60;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn:hover {
+    background: #1e8449;
+}

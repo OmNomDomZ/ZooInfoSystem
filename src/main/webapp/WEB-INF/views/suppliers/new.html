@@ -6,17 +6,37 @@
     <link rel="stylesheet" th:href="@{/css/suppliers_style.css}"/>
 </head>
 <body>
-<main class="form-page">
-    <h1>Новый поставщик</h1>
-    <form th:method="post" th:action="@{/zoo/suppliers}" th:object="${supplier}">
-        <label>Название:</label>
-        <input type="text" th:field="*{name}"/>
-        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
-        <label>Контакты:</label>
-        <input type="text" th:field="*{contacts}"/>
-        <div th:if="${#fields.hasErrors('contacts')}" th:errors="*{contacts}"/>
-        <button class="btn">Создать</button>
+<header>
+    <div class="container">
+        <h1>Новый поставщик</h1>
+    </div>
+</header>
+
+<main class="container form-page">
+    <form th:method="post"
+          th:action="@{/zoo/suppliers}"
+          th:object="${supplier}">
+        <label>
+            Название:
+            <input type="text" th:field="*{name}"/>
+            <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
+        </label>
+
+        <label>
+            Контакты:
+            <input type="text" th:field="*{contacts}"/>
+            <div class="error" th:if="${#fields.hasErrors('contacts')}" th:errors="*{contacts}"/>
+        </label>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn">Создать</button>
+            <a th:href="@{/zoo/suppliers}" class="btn btn-secondary">Отменить</a>
+        </div>
     </form>
 </main>
+
+<footer class="container">
+    <a href="javascript:history.back()" class="btn back-btn">← Назад</a>
+</footer>
 </body>
 </html>

@@ -1,121 +1,197 @@
-/* Базовые стили */
-body {
+/* ========== Reset & Base ========== */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+body {
     font-family: 'Roboto', sans-serif;
     background: #f4f7f9;
     color: #333;
+    line-height: 1.5;
+}
+a {
+    text-decoration: none;
+    color: inherit;
 }
 
+/* ========== Container & Centering ========== */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ========== Header ========== */
 header {
     background: #2d3a4e;
-    padding: 20px;
-    text-align: center;
     color: #fff;
+    text-align: center;
+    padding: 20px 0;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 2.5em;
+/* ========== Buttons ========== */
+.btn {
+    display: inline-block;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    background: #2d3a4e;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.2s;
+    text-align: center;
+    white-space: nowrap;
+}
+.btn:hover {
+    background: #1c2533;
+}
+.btn-secondary {
+    background: #6c757d;
+}
+.btn-secondary:hover {
+    background: #565e64;
+}
+.btn-danger {
+    background: #c82333;
+}
+.btn-danger:hover {
+    background: #a71d2a;
+}
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 0.8em;
+}
+.back-btn {
+    margin-top: 20px;
+    display: inline-block;
 }
 
-main {
-    padding: 20px;
-}
-
-/* Секция фильтров */
-.filters {
-    max-width: 1000px;
-    margin: 0 auto 20px;
-}
-
-.filters h2 {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    color: #2d3a4e;
-}
-
-/* Строка фильтров */
+/* ========== Filter Bar ========== */
 .filter-bar {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 30px;
 }
-
-/* Общий стиль полей */
 .filter-bar input,
 .filter-bar select {
-    padding: 6px 8px;
+    padding: 6px 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 0.9em;
 }
-
-/* Мультиселекты чуть выше */
-.filter-bar select[multiple] {
-    height: 60px;
+.filter-bar label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
 }
-
-/* Блок кнопок */
 .filter-buttons {
     display: flex;
     gap: 10px;
-    margin-left: auto;
+    align-items: center;
 }
 
-/* Секция результатов */
-.results {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-/* Список поставщиков */
-.supplier-list {
+/* ========== Tables ========== */
+table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: 20px;
-}
-
-.supplier-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 12px;
+    background: #fff;
     border-radius: 6px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-
-.supplier-card:hover {
-    background-color: #f9f9f9;
+th, td {
+    padding: 12px 15px;
+    text-align: left;
 }
-
-.supplier-link {
-    text-decoration: none;
-    color: #2d3a4e;
-    font-size: 1.1em;
-}
-
-.supplier-link:hover {
-    text-decoration: underline;
-}
-
-/* Кнопка добавления */
-.add-new {
-    text-align: center;
-}
-
-.btn {
-    display: inline-block;
-    background-color: #2d3a4e;
+thead {
+    background: #2d3a4e;
     color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
+}
+tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+.actions-cell {
+    white-space: nowrap;
 }
 
-.btn:hover {
-    background-color: #1c2533;
+/* ========== Bottom Buttons & Navigation ========== */
+.bottom-buttons {
+    text-align: center;
+    margin-top: 10px;
+    gap: 10px;
+    display: flex;
+    justify-content: center;
 }
+
+/* ========== Details Page ========== */
+.details h2,
+.details h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.add-delivery-form {
+    background: #fff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+.add-delivery-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+}
+
+/* ========== Формы «Новый / Редактировать» ========== */
+.form-page {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.form-page label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    gap: 6px;
+}
+.form-page input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+.error {
+    color: #c82333;
+    font-size: 0.85em;
+    margin-top: 4px;
+}
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Кнопка «Назад» внизу */
+.back-btn {
+    margin: 20px 0;
+    display: inline-block;
+}
+

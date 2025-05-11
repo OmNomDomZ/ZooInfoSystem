@@ -1,0 +1,47 @@
+<!-- templates/transfers/new.html -->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Новое перемещение</title>
+    <link rel="stylesheet" th:href="@{/css/transfers_style.css}"/>
+</head>
+<body>
+<header><h1>Новое перемещение</h1></header>
+<main class="container">
+    <form th:action="@{/zoo/transfers}" method="post">
+        <div class="form-row">
+            <label for="animalId">Животное:</label>
+            <select id="animalId" name="animalId" required>
+                <option value="">— Выберите —</option>
+                <option th:each="a : ${animals}"
+                        th:value="${a.id}"
+                        th:text="${a.nickname + ' (ID:' + a.id + ')'}"></option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="destinationZooId">Куда отдать:</label>
+            <select id="destinationZooId" name="destinationZooId" required>
+                <option value="">— Выберите зоопарк —</option>
+                <option th:each="z : ${zoos}"
+                        th:value="${z.id}"
+                        th:text="${z.name}"></option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="transferDate">Дата передачи:</label>
+            <input type="date" id="transferDate" name="transferDate"
+                   th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required/>
+        </div>
+        <div class="form-row">
+            <label for="reason">Причина:</label>
+            <textarea id="reason" name="reason" rows="3" required></textarea>
+        </div>
+        <div>
+            <button type="submit" class="btn">Сохранить</button>
+            <a th:href="@{/zoo/transfers}" class="btn">Отмена</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
