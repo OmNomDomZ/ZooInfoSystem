@@ -1,5 +1,6 @@
 package v.rabetsky.controllers;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,8 @@ public class AnimalTypesController {
     public String delete(@PathVariable int id, Model model) {
         try {
             animalTypeService.deleteType(id);
+        } catch (DataAccessException ex) {
+            throw ex;
         } catch (IllegalStateException ex) {
             model.addAttribute("deleteError", ex.getMessage());
             model.addAttribute("types", animalTypeService.findAll());

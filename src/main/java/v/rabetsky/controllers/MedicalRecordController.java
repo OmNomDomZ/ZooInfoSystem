@@ -1,6 +1,7 @@
 package v.rabetsky.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,7 +35,11 @@ public class MedicalRecordController {
         if (br.hasErrors()) {
             return "animals/medical_new";
         }
-        medicalRecordDAO.saveForAnimal(medicalRecord.getAnimalId(), medicalRecord);
+        try {
+            medicalRecordDAO.saveForAnimal(medicalRecord.getAnimalId(), medicalRecord);
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
         return "redirect:/zoo/animals/" + medicalRecord.getAnimalId();
     }
 
@@ -52,7 +57,11 @@ public class MedicalRecordController {
         if (br.hasErrors()) {
             return "animals/medical_edit";
         }
-        medicalRecordDAO.update(medicalRecord);
+        try {
+            medicalRecordDAO.update(medicalRecord);
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
         return "redirect:/zoo/animals/" + medicalRecord.getAnimalId();
     }
 }

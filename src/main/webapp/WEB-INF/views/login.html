@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор роли</title>
+    <style>
+        html,body { height:100%; margin:0; font-family:system-ui, sans-serif; }
+        body      { display:flex; align-items:center; justify-content:center;
+            background:#f0f4f8; }
+        .card     { padding:2.5rem 3rem; border-radius:12px;
+            background:#fff; box-shadow:0 4px 18px rgba(0,0,0,.12);
+            text-align:center; }
+        h2        { margin-top:0; margin-bottom:1.5rem; color:#334; }
+        button    { padding:.7rem 1.5rem; border:none; border-radius:6px;
+            font-size:1rem; cursor:pointer; margin:0 .5rem;
+            transition:.2s ease; }
+        button:first-of-type { background:#0066ff; color:#fff; }
+        button:last-of-type  { background:#e5e9ef; color:#334; }
+        button:first-of-type:hover { background:#0053d6; }
+        button:last-of-type:hover  { background:#d1d7e0; }
+    </style>
+</head>
+<body>
+<form class="card" action="#" method="post">
+    <h2>Выберите роль</h2>
+    <div>
+        <button name="role" value="ADMIN">Администратор</button>
+        <button name="role" value="READER">Только&nbsp;чтение</button>
+    </div>
+</form>
+</body>
+</html>

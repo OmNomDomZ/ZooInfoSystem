@@ -1,5 +1,6 @@
 package v.rabetsky.controllers;
 
+import org.springframework.dao.DataAccessException;
 import v.rabetsky.dto.AnimalDTO;
 import v.rabetsky.dto.CageDTO;
 import v.rabetsky.models.CageForm;
@@ -45,7 +46,11 @@ public class CagesController {
         if (br.hasErrors()) {
             return index(model);
         }
-        cageService.createCage(form.getAnimalTypeId(), form.getCapacity());
+        try {
+            cageService.createCage(form.getAnimalTypeId(), form.getCapacity());
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
         return "redirect:/zoo/cages";
     }
 
@@ -53,6 +58,8 @@ public class CagesController {
     public String delete(@PathVariable int id, Model model) {
         try {
             cageService.deleteCage(id);
+        } catch (DataAccessException ex) {
+            throw ex;
         } catch (IllegalStateException ex) {
             model.addAttribute("deleteError", ex.getMessage());
             return index(model);
@@ -71,6 +78,8 @@ public class CagesController {
 
         try {
             cageService.moveAnimal(form.getAnimalId(), form.getNewCageId());
+        } catch (DataAccessException ex) {
+            throw ex;
         } catch (RuntimeException ex) {
             model.addAttribute("deleteError", ex.getMessage());
             return index(model);

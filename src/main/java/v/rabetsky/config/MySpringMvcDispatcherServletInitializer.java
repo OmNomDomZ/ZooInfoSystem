@@ -30,6 +30,8 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
 
         HiddenHttpMethodFilter hiddenHttpMethodFilter = new HiddenHttpMethodFilter();
 
-        return new Filter[] { encodingFilter, hiddenHttpMethodFilter };
+        RoleFilter roleFilter = new RoleFilter();
+
+        return new Filter[] { encodingFilter, hiddenHttpMethodFilter, roleFilter };
     }
 }

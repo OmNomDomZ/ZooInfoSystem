@@ -1,79 +1,102 @@
 package v.rabetsky.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.sql.DataSource;
+import java.util.Map;
 
 @Configuration
 @ComponentScan("v.rabetsky")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
-    private final ApplicationContext applicationContext;
+
+    private final ApplicationContext ctx;
 
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+    public SpringConfig(ApplicationContext ctx) { this.ctx = ctx; }
+
+    /* ---------- View-layer ---------- */
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
-        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-        resolver.setApplicationContext(applicationContext);
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setPrefix("/WEB-INF/views/");
-        resolver.setSuffix(".html");
-        resolver.setTemplateMode("HTML");
-        return resolver;
+        SpringResourceTemplateResolver r = new SpringResourceTemplateResolver();
+        r.setApplicationContext(ctx);
+        r.setCharacterEncoding("UTF-8");
+        r.setPrefix("/WEB-INF/views/");
+        r.setSuffix(".html");
+        r.setTemplateMode("HTML");
+        return r;
     }
 
     @Bean
     public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.setTemplateResolver(templateResolver());
-        engine.setEnableSpringELCompiler(true);
-        return engine;
+        SpringTemplateEngine e = new SpringTemplateEngine();
+        e.setTemplateResolver(templateResolver());
+        e.setEnableSpringELCompiler(true);
+        return e;
     }
 
     @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setTemplateEngine(templateEngine());
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setContentType("text/html; charset=UTF-8");
-        registry.viewResolver(resolver);
-    }
-
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/zoo_db");
-        dataSource.setUsername("zoo_admin");
-        dataSource.setPassword("zoo_password");
-
-        return dataSource;
+    public void configureViewResolvers(ViewResolverRegistry reg) {
+        ThymeleafViewResolver v = new ThymeleafViewResolver();
+        v.setTemplateEngine(templateEngine());
+        v.setCharacterEncoding("UTF-8");
+        v.setContentType("text/html; charset=UTF-8");
+        reg.viewResolver(v);
     }
 
     @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer c) {
+        c.enable();
+    }
+
+    /* ---------- DataSource-layer ---------- */
+
+    /** Администратор. */
+    @Bean("adminDs")
+    public DataSource adminDs() {
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setUrl("jdbc:postgresql://localhost:5432/zoo_db");
+        ds.setUsername("zoo_admin");
+        ds.setPassword("zoo_password");
+        return ds;
+    }
+
+    /** Читатель. */
+    @Bean("readerDs")
+    public DataSource readerDs() {
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setUrl("jdbc:postgresql://localhost:5432/zoo_db");
+        ds.setUsername("zoo_reader");
+        ds.setPassword("reader_pass");
+        return ds;
+    }
+
+    /** Маршрутизатор; объявляем как @Primary, чтобы его внедряли по умолчанию. */
+    @Primary
+    @Bean
+    public DataSource routingDs(@Qualifier("adminDs")  DataSource admin,
+                                @Qualifier("readerDs") DataSource reader) {
+
+        RoleRoutingDataSource rds = new RoleRoutingDataSource();
+        rds.setTargetDataSources(Map.of(Role.ADMIN, admin, Role.READER, reader));
+        rds.setDefaultTargetDataSource(reader);
+        return rds;
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public JdbcTemplate jdbcTemplate(DataSource routingDs) {
+        return new JdbcTemplate(routingDs);
     }
 }

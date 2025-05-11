@@ -1,6 +1,7 @@
 package v.rabetsky.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -77,6 +78,8 @@ public class AnimalsController {
         try {
             int newId = animalService.saveAnimalWithOrigin(animal, arrivalType, originZoo, p1, p2);
             return "redirect:/zoo/animals/" + newId + "/medical/new";
+        } catch (DataAccessException ex) {
+            throw ex;
         } catch (RuntimeException ex) {
             br.reject("", ex.getMessage());
             prepareNewForm(m);
@@ -107,7 +110,10 @@ public class AnimalsController {
         try {
             animalService.update(id, animal);
             return "redirect:/zoo/animals";
-        } catch (RuntimeException ex) {
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
+        catch (RuntimeException ex) {
             model.addAttribute("cageList", cageDAO.findAllDTO());
             model.addAttribute("animalTypeList", animalTypeDAO.findAll());
             br.reject("", ex.getMessage());

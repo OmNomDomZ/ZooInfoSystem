@@ -1,6 +1,7 @@
 package v.rabetsky.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -71,7 +72,12 @@ public class EmployeesController {
             return "employees/new";
         }
 
-        employeeService.save(employee);
+        try{
+            employeeService.save(employee);
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
+
         return "redirect:/zoo/employees";
     }
 
@@ -88,8 +94,11 @@ public class EmployeesController {
         if (bindingResult.hasErrors()) {
             return "employees/edit";
         }
-
-        employeeService.update(id, employee);
+        try {
+            employeeService.update(id, employee);
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
         return "redirect:/zoo/employees/" + id;
     }
 

@@ -1,6 +1,7 @@
 package v.rabetsky.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,7 +57,12 @@ public class SuppliersController {
     @PostMapping("")
     public String create(@Valid @ModelAttribute Supplier s, BindingResult br) {
         if (br.hasErrors()) return "suppliers/new";
-        service.saveSupplier(s);
+
+        try {
+            service.saveSupplier(s);
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
         return "redirect:/zoo/suppliers";
     }
 
@@ -71,7 +77,12 @@ public class SuppliersController {
                          @Valid @ModelAttribute Supplier s,
                          BindingResult br) {
         if (br.hasErrors()) return "suppliers/edit";
-        service.updateSupplier(id, s);
+
+        try {
+            service.updateSupplier(id, s);
+        } catch (DataAccessException ex) {
+            throw ex;
+        }
         return "redirect:/zoo/suppliers";
     }
 

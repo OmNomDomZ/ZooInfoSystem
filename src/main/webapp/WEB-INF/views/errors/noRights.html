@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Недостаточно прав</title>
+    <style>
+        body   { font-family: sans-serif; background:#fafafa; }
+        .box   { max-width:500px; margin:5rem auto; padding:2rem;
+            border:1px solid #c33; border-radius:4px; background:#fff0f0; }
+        h1     { color:#c33; font-size:1.4rem; }
+        a      { display:inline-block; margin-top:1rem; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1 th:text="${message}">Недостаточно прав</h1>
+    <a href="javascript:history.back()">← вернуться</a>
+</div>
+</body>
+</html>
