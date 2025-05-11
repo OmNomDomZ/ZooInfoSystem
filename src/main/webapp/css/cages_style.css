@@ -1,0 +1,126 @@
+/* Базовые стили */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #f4f7f9;
+    color: #333;
+}
+header {
+    background: #2d3a4e;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+/* Контейнер */
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Карточки клеток */
+.cage-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.cage-card:hover {
+    background-color: #f9f9f9;
+}
+
+.cage-card .card-header {
+    padding: 12px 16px;
+    background: #eef2f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.cage-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.cage-card th, .cage-card td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.cage-card th {
+    background: #f0f0f0;
+}
+.empty {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+}
+
+/* Форма создания */
+.create-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.create-form .form-row {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+.create-form label {
+    width: 140px;
+    font-weight: 500;
+}
+.create-form select,
+.create-form input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.error {
+    color: #c0392b;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+
+/* Кнопки */
+.btn {
+    background-color: #2d3a4e;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.btn:hover {
+    background-color: #1c2533;
+}
+.btn-small {
+    padding: 4px 8px;
+    font-size: 0.8em;
+}
+.btn-danger {
+    background-color: #c0392b;
+}
+.btn-danger:hover {
+    background-color: #922b21;
+}
+
+/* Сообщение об ошибке удаления */
+.error-msg {
+    background: #fdecea;
+    color: #c0392b;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+}

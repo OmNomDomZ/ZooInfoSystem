@@ -47,4 +47,15 @@ public class CageDAO {
                         rs.getInt("capacity")
                 ));
     }
+
+    public void save(int animalTypeId, int capacity) {
+        jdbc.update(
+                "INSERT INTO cages (animal_type_id, capacity) VALUES (?, ?)",
+                animalTypeId, capacity
+        );
+    }
+
+    public void delete(int cageId) {
+        jdbc.update("DELETE FROM cages WHERE id = ?", cageId);
+    }
 }

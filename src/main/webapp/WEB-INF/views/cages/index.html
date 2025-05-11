@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Клетки</title>
+    <link rel="stylesheet" th:href="@{/css/cages_style.css}">
+</head>
+<body>
+<header>
+    <h1>Клетки</h1>
+</header>
+<main>
+    <div class="container">
+
+        <!-- Ошибки удаления -->
+        <div th:if="${deleteError}" class="error-msg" th:text="${deleteError}"></div>
+
+        <!-- Список клеток с животными -->
+        <section>
+            <h2>Существующие клетки</h2>
+            <div th:each="c : ${cages}" class="cage-card">
+                <div class="card-header">
+          <span>Клетка №<b th:text="${c.id}">1</b>
+            (вид: <i th:text="${c.animalTypeName}">Лев</i>,
+            вместимость: <span th:text="${c.capacity}">3</span>)
+          </span>
+                    <form th:action="@{/zoo/cages/{id}/delete(id=${c.id})}"
+                          method="post" style="display:inline">
+                        <button class="btn btn-danger btn-small"
+                                th:disabled="${#lists.isEmpty(animalsByCage[c.id]) == false}">
+                            Удалить
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Таблица животных в этой клетке -->
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Никнейм</th>
+                        <th>Пол</th>
+                        <th>Дата приезда</th>
+                        <th>Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${animalsByCage[c.id]}">
+                        <td th:text="${a.nickname}">Симба</td>
+                        <td th:text="${a.gender}">мужской</td>
+                        <td th:text="${a.arrivalDate}">2022-05-10</td>
+                        <td>
+                            <form th:action="@{/zoo/cages/{id}/move(id=${c.id})}"
+                                  method="post">
+                                <input type="hidden" name="animalId" th:value="${a.id}"/>
+                                <select name="newCageId">
+                                    <option value="" disabled selected>Выберите клетку</option>
+                                    <option th:each="opt : ${allCages}"
+                                            th:value="${opt.id}"
+                                            th:text="${'№' + opt.id + ' (вид:' + opt.animalTypeName + ')'}">
+                                    </option>
+                                </select>
+                                <button class="btn btn-small">Переместить</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(animalsByCage[c.id])}">
+                        <td colspan="4" class="empty">Пусто</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Форма создания новой клетки -->
+        <section>
+            <h2>Создать новую клетку</h2>
+            <form th:action="@{/zoo/cages}" th:object="${newCage}" method="post" class="create-form">
+                <div class="form-row">
+                    <label>Вид животного:</label>
+                    <select th:field="*{animalTypeId}">
+                        <option value="" disabled>– Выберите –</option>
+                        <option th:each="t : ${allTypes}"
+                                th:value="${t.id}"
+                                th:text="${t.type}"></option>
+                    </select>
+                    <div class="error" th:errors="*{animalTypeId}"></div>
+                </div>
+                <div class="form-row">
+                    <label>Вместимость:</label>
+                    <input type="number" th:field="*{capacity}" min="1"/>
+                    <div class="error" th:errors="*{capacity}"></div>
+                </div>
+                <button type="submit" class="btn">Создать</button>
+            </form>
+        </section>
+
+    </div>
+</main>
+</body>
+</html>

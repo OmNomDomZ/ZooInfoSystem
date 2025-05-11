@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import v.rabetsky.dto.AnimalDTO;
 import v.rabetsky.models.filters.AnimalFilter;
 import v.rabetsky.models.entities.Animal;
 
@@ -68,6 +69,19 @@ public class AnimalDAO {
     }
 
     public void updateCage(int animalId, int newCageId) {
+        jdbcTemplate.update(
+                "UPDATE animals SET cage_id = ? WHERE id = ?",
+                newCageId, animalId
+        );
+    }
+
+    public List<AnimalDTO> findByCage(int cageId) {
+        log.info("Animals: получили список животных из клетки={}", cageId);
+        return jdbcTemplate.query("SELECT * FROM animals WHERE cage_id = ?",
+                new BeanPropertyRowMapper<>(AnimalDTO.class), cageId);
+    }
+
+    public void moveToCage(int animalId, int newCageId) {
         jdbcTemplate.update(
                 "UPDATE animals SET cage_id = ? WHERE id = ?",
                 newCageId, animalId
