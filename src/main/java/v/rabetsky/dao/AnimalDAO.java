@@ -81,6 +81,12 @@ public class AnimalDAO {
                 new BeanPropertyRowMapper<>(AnimalDTO.class), cageId);
     }
 
+    public List<AnimalDTO> findByType(int animalTypeId) {
+        log.info("Animals: получили список животных по типу={}", animalTypeId);
+        return jdbcTemplate.query("SELECT * FROM animals WHERE animal_type_id = ?",
+                new BeanPropertyRowMapper<>(AnimalDTO.class), animalTypeId);
+    }
+
     public void moveToCage(int animalId, int newCageId) {
         jdbcTemplate.update(
                 "UPDATE animals SET cage_id = ? WHERE id = ?",

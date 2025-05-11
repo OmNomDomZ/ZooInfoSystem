@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Виды животных</title>
+  <link rel="stylesheet" th:href="@{/css/animal_types_style.css}">
+</head>
+<body>
+<header>
+  <h1>Виды животных</h1>
+  <a th:href="@{/zoo/}" class="btn">Главная страница</a>
+</header>
+<main>
+  <div class="container">
+
+    <div th:if="${deleteError}" class="error-msg" th:text="${deleteError}"></div>
+
+    <section>
+      <div th:each="t : ${types}" class="type-card">
+        <div class="card-header">
+                    <span>
+                        Вид: <b th:text="${t.type}">Лев</b>,
+                        Питание: <i th:text="${t.dietTypeName}">хищник</i>
+                    </span>
+          <form th:action="@{/zoo/animal-types/{id}/delete(id=${t.id})}" method="post">
+            <button class="btn btn-danger btn-small">
+              Удалить
+            </button>
+          </form>
+        </div>
+        <table>
+          <thead>
+          <tr><th>Кличка</th><th>Пол</th><th>Дата прибытия</th></tr>
+          </thead>
+          <tbody>
+          <tr th:each="a : ${animalsByType[t.id]}">
+            <td th:text="${a.nickname}">Симба</td>
+            <td th:text="${a.gender}">мужской</td>
+            <td th:text="${a.arrivalDate}">2023-01-01</td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(animalsByType[t.id])}">
+            <td colspan="3" class="empty">Нет животных</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Добавить новый вид</h2>
+      <form th:action="@{/zoo/animal-types}" th:object="${newType}" method="post" class="create-form">
+        <div class="form-row">
+          <label>Название вида:</label>
+          <input th:field="*{type}" placeholder="например, Лев"/>
+          <div class="error" th:errors="*{type}"></div>
+        </div>
+        <div class="form-row">
+          <label>Тип питания:</label>
+          <select th:field="*{dietTypeId}">
+            <option value="">— Выберите —</option>
+            <option th:each="d : ${dietTypes}" th:value="${d.id}" th:text="${d.type}"></option>
+          </select>
+          <div class="error" th:errors="*{dietTypeId}"></div>
+        </div>
+        <button class="btn">Добавить</button>
+      </form>
+    </section>
+  </div>
+</main>
+</body>
+</html>

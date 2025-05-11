@@ -21,13 +21,15 @@ public class EmployeeDAO {
     }
 
     public List<Employee> findByFilter(EmployeeFilter f) {
-        return jdbcTemplate.query(
+        List<Employee> employees = jdbcTemplate.query(
                 "SELECT * FROM get_employees(?, ?, ?)",
                 new BeanPropertyRowMapper<>(Employee.class),
                 f.getFullName(),
                 f.getPositionIds(),
                 f.getGenders()
         );
+        log.info("Employees: {}", employees);
+        return employees;
     }
 
     public Employee show(int id) {
