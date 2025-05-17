@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import v.rabetsky.annotations.AdminOnly;
 import v.rabetsky.models.AnimalTypeForm;
 import v.rabetsky.services.AnimalTypeService;
 
@@ -28,6 +29,7 @@ public class AnimalTypesController {
         return "animal_types/index";
     }
 
+    @AdminOnly
     @PostMapping
     public String add(@ModelAttribute("newType") @Valid AnimalTypeForm form,
                       BindingResult br,
@@ -37,6 +39,7 @@ public class AnimalTypesController {
         return "redirect:/zoo/animal-types";
     }
 
+    @AdminOnly
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable int id, Model model) {
         try {

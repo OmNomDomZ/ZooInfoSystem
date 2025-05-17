@@ -1,6 +1,7 @@
 package v.rabetsky.controllers;
 
 import org.springframework.dao.DataAccessException;
+import v.rabetsky.annotations.AdminOnly;
 import v.rabetsky.dto.AnimalDTO;
 import v.rabetsky.dto.CageDTO;
 import v.rabetsky.models.CageForm;
@@ -39,6 +40,7 @@ public class CagesController {
         return "cages/index";
     }
 
+    @AdminOnly
     @PostMapping
     public String create(@ModelAttribute("newCage") @Valid CageForm form,
                          BindingResult br,
@@ -54,6 +56,7 @@ public class CagesController {
         return "redirect:/zoo/cages";
     }
 
+    @AdminOnly
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable int id, Model model) {
         try {
@@ -67,6 +70,7 @@ public class CagesController {
         return "redirect:/zoo/cages";
     }
 
+    @AdminOnly
     @PostMapping("/{id}/move")
     public String move(@PathVariable("id") int fromCage,
                        @ModelAttribute("moveForm") @Valid CageForm.MoveForm form,

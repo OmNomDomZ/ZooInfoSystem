@@ -18,6 +18,6 @@ public class GlobalExceptionHandler {
     public String insufficientRights(Model m) {
         m.addAttribute("message",
                 "У выбранной роли нет прав на изменение данных.");
-        return "errors/noRights";           // /WEB-INF/views/errors/noRights.html
+        return "errors/noRights";
     }
 }

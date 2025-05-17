@@ -15,8 +15,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String doLogin(@RequestParam("role") String role, HttpSession s) {
-        // "ADMIN" или что-то другое → READER
         s.setAttribute("ROLE", "ADMIN".equals(role) ? "ADMIN" : "READER");
-        return "redirect:/zoo";          // перенаправьте, куда нужно
+        return "redirect:/zoo";
     }
 }

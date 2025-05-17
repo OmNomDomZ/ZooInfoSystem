@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import v.rabetsky.annotations.AdminOnly;
 import v.rabetsky.models.entities.*;
 import v.rabetsky.models.filters.SupplierFilter;
 import v.rabetsky.services.SupplierService;
@@ -32,7 +33,6 @@ public class SuppliersController {
         return service.getAllFoodTypes();
     }
 
-    /** INDEX + фильтр */
     @GetMapping("")
     public String index(SupplierFilter filter, Model m) {
         m.addAttribute("filter", filter);
@@ -40,7 +40,6 @@ public class SuppliersController {
         return "suppliers/index";
     }
 
-    /** SHOW + управления доставками */
     @GetMapping("/{id}")
     public String show(@PathVariable int id, Model m) {
         m.addAttribute("supplier", service.findSupplier(id));
@@ -49,11 +48,13 @@ public class SuppliersController {
         return "suppliers/show";
     }
 
-    /** CREATE Supplier */
+    @AdminOnly
     @GetMapping("/new")
     public String newSupplier(@ModelAttribute("supplier") Supplier s) {
         return "suppliers/new";
     }
+
+    @AdminOnly
     @PostMapping("")
     public String create(@Valid @ModelAttribute Supplier s, BindingResult br) {
         if (br.hasErrors()) return "suppliers/new";
@@ -66,12 +67,14 @@ public class SuppliersController {
         return "redirect:/zoo/suppliers";
     }
 
-    /** EDIT Supplier */
+    @AdminOnly
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable int id, Model m) {
         m.addAttribute("supplier", service.findSupplier(id));
         return "suppliers/edit";
     }
+
+    @AdminOnly
     @PatchMapping("/{id}")
     public String update(@PathVariable int id,
                          @Valid @ModelAttribute Supplier s,
@@ -86,12 +89,14 @@ public class SuppliersController {
         return "redirect:/zoo/suppliers";
     }
 
+    @AdminOnly
     @DeleteMapping("/{id}")
     public String delete(@PathVariable int id) {
         service.deleteSupplier(id);
         return "redirect:/zoo/suppliers";
     }
 
+    @AdminOnly
     @PostMapping("/{supplierId}/deliveries")
     public String addDelivery(@PathVariable int supplierId,
                               @Valid @ModelAttribute("newDelivery") SupplierFood sf,
@@ -103,6 +108,7 @@ public class SuppliersController {
         return "redirect:/zoo/suppliers/" + supplierId;
     }
 
+    @AdminOnly
     @PatchMapping("/{supplierId}/deliveries/{delivId}")
     public String editDelivery(@PathVariable int supplierId,
                                @PathVariable int delivId,
@@ -114,6 +120,7 @@ public class SuppliersController {
         return "redirect:/zoo/suppliers/" + supplierId;
     }
 
+    @AdminOnly
     @DeleteMapping("/{supplierId}/deliveries/{delivId}")
     public String deleteDelivery(@PathVariable int supplierId,
                                  @PathVariable int delivId) {

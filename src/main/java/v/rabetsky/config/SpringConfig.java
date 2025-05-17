@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import v.rabetsky.annotations.AdminInterceptor;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -24,7 +25,14 @@ public class SpringConfig implements WebMvcConfigurer {
     @Autowired
     public SpringConfig(ApplicationContext ctx) { this.ctx = ctx; }
 
-    /* ---------- View-layer ---------- */
+    @Autowired
+    private AdminInterceptor adminInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(adminInterceptor)
+                .addPathPatterns("/zoo/**");
+    }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
@@ -59,7 +67,6 @@ public class SpringConfig implements WebMvcConfigurer {
         c.enable();
     }
 
-    /* ---------- DataSource-layer ---------- */
 
     /** Администратор. */
     @Bean("adminDs")
@@ -83,7 +90,6 @@ public class SpringConfig implements WebMvcConfigurer {
         return ds;
     }
 
-    /** Маршрутизатор; объявляем как @Primary, чтобы его внедряли по умолчанию. */
     @Primary
     @Bean
     public DataSource routingDs(@Qualifier("adminDs")  DataSource admin,

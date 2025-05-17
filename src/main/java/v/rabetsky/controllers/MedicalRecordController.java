@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import v.rabetsky.annotations.AdminOnly;
 import v.rabetsky.dao.MedicalRecordDAO;
 import v.rabetsky.models.entities.MedicalRecord;
 
@@ -21,6 +22,7 @@ public class MedicalRecordController {
         this.medicalRecordDAO = medicalRecordDAO;
     }
 
+    @AdminOnly
     @GetMapping("/new")
     public String newRecord(@PathVariable int animalId, Model model) {
         MedicalRecord mr = new MedicalRecord();
@@ -29,6 +31,7 @@ public class MedicalRecordController {
         return "animals/medical_new";
     }
 
+    @AdminOnly
     @PostMapping("")
     public String create(@ModelAttribute @Valid MedicalRecord medicalRecord,
                          BindingResult br) {
@@ -43,6 +46,7 @@ public class MedicalRecordController {
         return "redirect:/zoo/animals/" + medicalRecord.getAnimalId();
     }
 
+    @AdminOnly
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable int animalId,
                        @PathVariable int id,
@@ -51,6 +55,7 @@ public class MedicalRecordController {
         return "animals/medical_edit";
     }
 
+    @AdminOnly
     @PatchMapping("/{id}")
     public String update(@ModelAttribute @Valid MedicalRecord medicalRecord,
                          BindingResult br) {

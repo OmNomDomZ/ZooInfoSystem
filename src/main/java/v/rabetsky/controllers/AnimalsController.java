@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import v.rabetsky.annotations.AdminOnly;
 import v.rabetsky.dao.AnimalTypeDAO;
 import v.rabetsky.dao.CageDAO;
 import v.rabetsky.dto.AnimalDTO;
@@ -52,6 +53,7 @@ public class AnimalsController {
         return "animals/show";
     }
 
+    @AdminOnly
     @GetMapping("/new")
     public String newAnimal(Model m) {
         m.addAttribute("animal", new Animal());
@@ -61,6 +63,7 @@ public class AnimalsController {
         return "animals/new";
     }
 
+    @AdminOnly
     @PostMapping("")
     public String create(@ModelAttribute("animal") @Valid Animal animal,
                          BindingResult br,
@@ -93,6 +96,7 @@ public class AnimalsController {
         m.addAttribute("allAnimals",     animalService.getAllAnimals(new AnimalFilter()));
     }
 
+    @AdminOnly
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable int id, Model model) {
         model.addAttribute("animal", animalService.findById(id));
@@ -101,6 +105,7 @@ public class AnimalsController {
         return "animals/edit";
     }
 
+    @AdminOnly
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("animal") @Valid Animal animal,
                          BindingResult br,
@@ -121,12 +126,14 @@ public class AnimalsController {
         }
     }
 
+    @AdminOnly
     @DeleteMapping("/{id}")
     public String delete(@PathVariable int id) {
         animalService.delete(id);
         return "redirect:/zoo/animals";
     }
 
+    @AdminOnly
     @GetMapping("/{id}/move")
     public String moveForm(@PathVariable int id, Model model) {
         AnimalDTO animal = animalService.findById(id);
@@ -139,6 +146,7 @@ public class AnimalsController {
         return "animals/move";
     }
 
+    @AdminOnly
     @PostMapping("/{id}/move")
     public String moveSubmit(@PathVariable int id,
                              @RequestParam("cageId") int cageId) {

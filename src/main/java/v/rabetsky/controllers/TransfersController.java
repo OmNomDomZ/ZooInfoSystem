@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import v.rabetsky.annotations.AdminOnly;
 import v.rabetsky.dao.ZooDAO;
 import v.rabetsky.dto.AnimalDTO;
 import v.rabetsky.models.entities.Zoo;
@@ -38,6 +39,7 @@ public class TransfersController {
         return "transfers/index";
     }
 
+    @AdminOnly
     @GetMapping("/new")
     public String newTransfer(Model model) {
         List<AnimalDTO> animals = animalService.getAllAnimals(new AnimalFilter());
@@ -49,6 +51,7 @@ public class TransfersController {
         return "transfers/new";
     }
 
+    @AdminOnly
     @PostMapping
     public String create(@RequestParam("animalId") int animalId,
                          @RequestParam("destinationZooId") Integer destinationZooId,
