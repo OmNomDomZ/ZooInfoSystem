@@ -10,6 +10,7 @@ import v.rabetsky.models.filters.AnimalFilter;
 import v.rabetsky.models.entities.Animal;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -66,6 +67,24 @@ public class AnimalDAO {
                 a.getNickname(), a.getGender(), a.getArrivalDate(),
                 a.isNeedsWarmHousing(), a.getAnimalTypeId(), a.getCageId()
         );
+    }
+
+    public int saveWithBirth(Animal a, int parent1Id, int parent2Id) {
+        log.info("[DAO] calling save_animal_with_birth for parents {} and {}", parent1Id, parent2Id);
+        Integer newId = jdbcTemplate.queryForObject(
+                "SELECT save_animal_with_birth(?, ?, ?, ?, ?, ?, ?, ?)",
+                Integer.class,
+                a.getNickname(),
+                a.getGender(),
+                a.getArrivalDate(),
+                a.isNeedsWarmHousing(),
+                a.getAnimalTypeId(),
+                a.getCageId(),
+                parent1Id,
+                parent2Id
+        );
+        log.info("[DAO] save_animal_with_birth returned id={}", newId);
+        return Objects.requireNonNull(newId, "Function returned null");
     }
 
     public void updateCage(int animalId, int newCageId) {

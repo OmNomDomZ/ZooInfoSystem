@@ -162,10 +162,11 @@ public class AnimalService {
                                     String originZooName,
                                     Integer parent1Id,
                                     Integer parent2Id) {
-        // 1) создаём животное
-        int newId = animalDAO.saveReturningId(animal);
 
+        int newId;
         if ("ARRIVED".equals(arrivalType)) {
+            // 1) создаём животное
+            newId = animalDAO.saveReturningId(animal);
             // 2) обрабатываем привоз
             int zooId = zooDAO.getOrCreateZoo(originZooName);
             zooDAO.recordTransfer(
@@ -176,15 +177,10 @@ public class AnimalService {
             );
 
         } else if ("BORN".equals(arrivalType)) {
-            // ваша уже готовая валидация и birthDAO.save(...)
             validateNewBorn(animal, parent1Id, parent2Id);
-            birthDAO.save(
-                    newId,
-                    parent1Id,
-                    parent2Id,
-                    animal.getArrivalDate(),
-                    "оставлен"
-            );
+
+            newId = animalDAO.saveWithBirth(animal, parent1Id, parent2Id);
+            log.info("[Service] BORN: saved animal id={} with parents {}, {}", newId, parent1Id, parent2Id);
 
         } else {
             throw new IllegalArgumentException("Unknown arrivalType: " + arrivalType);
