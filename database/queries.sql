@@ -160,7 +160,34 @@ from animals a
          left join medical_records mr on a.id = mr.animal_id
 order by a.nickname;
 
--- 12.	Получить пеpечень животных, от котоpых можно ожидать потомство в пpеспективе, в указанный пеpиод.
+-- 12.	Получить пеpечень животных, от котоpых можно ожидать потомство в пеpспективе, в указанный пеpиод.
+SELECT
+    a.id,
+    a.nickname,
+    t.type       AS species,
+    a.cage_id
+FROM animals a
+         JOIN animal_types t
+              ON a.animal_type_id = t.id
+-- Условие «есть другой такого же вида в той же клетке»
+WHERE EXISTS (
+    SELECT 1
+    FROM animals a2
+    WHERE a2.animal_type_id = a.animal_type_id
+      AND a2.cage_id        = a.cage_id
+      AND a2.id <> a.id
+)
+-- Условие «нет недавних детей»
+  AND COALESCE(
+              ( SELECT MAX(br.birth_date)
+                FROM birth_records br
+                WHERE br.parent_id_1 = a.id
+                   OR br.parent_id_2 = a.id
+              ),
+              '1900-01-01'::date   -- если у животного ни одного ребёнка
+      )
+    <= ('2025-05-01'::date - INTERVAL '3 months')
+ORDER BY a.cage_id, a.animal_type_id, a.id;
 
 -- 13.	Получить перечень и общее число зоопаpков, с котоpыми был пpоизведен обмен животными в целом или животными только указанного вида.
 select z.name,

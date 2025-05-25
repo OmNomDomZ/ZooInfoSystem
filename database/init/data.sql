@@ -80,6 +80,24 @@ values ('Иван Петров', 'мужской', '2020-06-01', '1990-04-15',
        ('Дарья Орлова', 'женский', '2021-08-11', '1991-09-25',
         (select id from positions where title = 'смотритель'), 58000, 'daria@example.com');
 
+insert into vets (id, license_number, specialization)
+values (1, '47982342', 'хирург'),
+       (5, '79324839', 'терапия'),
+       (9, '23489774', 'онкологии');
+
+insert into keeper (id, section)
+values (2, 'Террариум'),
+       (6, 'Аквариум'),
+       (10, 'Приматы');
+
+insert into janitors (id, cleaning_shift, area, equipment)
+values (3, 'день', 'Аквариум', 'скребок, губка'),
+       (7, 'день', 'Террариум', 'шланг, губка');
+
+insert into administrators (id, department, phone)
+values (4, 'Администратор по работе с посетителями', '+79007894398'),
+       (8, 'Администратор по кадровой работе', '+79001234567');
+
 -- 9. Еда
 insert into food (name, food_type_id, is_produced_internally)
 values ('Мясо говяжье', (select id from food_types where type = 'мясо'), false),
@@ -192,3 +210,6 @@ values ((select id from animals where nickname = 'Симба'), 1, '2022-05-10')
        ((select id from animals where nickname = 'Рекс'), 6, '2023-07-02');
 
 -- 17. Записи о рождении (потомство)
+insert into birth_records (child_id, parent_id_1, parent_id_2, birth_date, status)
+values (10, 1, 6, '2025-04-30', 'оставлен'),
+       (17, 1, 6, '2024-09-23', 'оставлен');

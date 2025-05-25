@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Детали сотрудника</title>
+
     <link rel="stylesheet" th:href="@{/css/employees_style.css}"/>
+
+    <!-- шрифты/префетчи как были -->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
@@ -11,11 +14,13 @@
 </head>
 <body>
 <header><h1>Детали сотрудника</h1></header>
+
 <main class="container">
 
-    <!-- Основная карточка -->
+    <!-- ───── карточка сотрудника ───── -->
     <section class="card employee-info">
         <div class="card-body">
+
             <p><b>Полное имя:</b> [[${employee.fullName}]]</p>
             <p><b>Пол:</b> [[${employee.gender}]]</p>
             <p><b>Дата найма:</b> [[${employee.hireDate}]]</p>
@@ -24,28 +29,62 @@
             <p><b>Зарплата:</b> [[${employee.salary}]]</p>
             <p><b>Контакты:</b> [[${employee.contactInfo}]]</p>
             <p><b>Special attributes:</b> [[${employee.specialAttributes}]]</p>
+
+            <!-- ───── Ветеринар ───── -->
+            <div th:if="${employee.positionName == 'ветеринар'}">
+                <hr/>
+                <h3>Данные ветеринара</h3>
+                <p><b>Номер лицензии:</b> [[${employee.licenseNumber}]]</p>
+                <p><b>Специализация:</b> [[${employee.specialization}]]</p>
+            </div>
+
+            <!-- ───── Смотритель ───── -->
+            <div th:if="${employee.positionName == 'смотритель'}">
+                <hr/>
+                <h3>Данные смотрителя</h3>
+                <p><b>Сектор:</b> [[${employee.section}]]</p>
+            </div>
+
+            <!-- ───── Уборщик ───── -->
+            <div th:if="${employee.positionName == 'уборщик'}">
+                <hr/>
+                <h3>Данные уборщика</h3>
+                <p><b>Смена:</b> [[${employee.cleaningShift}]]</p>
+                <p><b>Участок:</b> [[${employee.area}]]</p>
+                <p><b>Инвентарь:</b> [[${employee.equipment}]]</p>
+            </div>
+
+            <!-- ───── Администратор ───── -->
+            <div th:if="${employee.positionName == 'администратор'}">
+                <hr/>
+                <h3>Данные администратора</h3>
+                <p><b>Отдел:</b> [[${employee.department}]]</p>
+                <p><b>Внутренний телефон:</b> [[${employee.phone}]]</p>
+            </div>
         </div>
+
         <div class="card-footer">
             <a th:href="@{/zoo/employees/{id}/edit(id=${employee.id})}" class="btn">Редактировать</a>
-            <form th:action="@{/zoo/employees/{id}(id=${employee.id})}" th:method="delete" style="display:inline">
+
+            <form th:action="@{/zoo/employees/{id}(id=${employee.id})}"
+                  th:method="delete" style="display:inline">
                 <button class="btn btn-danger">Удалить</button>
             </form>
+
             <a th:href="@{/zoo/employees}" class="btn">Назад</a>
         </div>
     </section>
 
-    <!-- Таблица: работает с животными -->
+    <!-- ───── Работает с животными ───── -->
     <section>
         <h2>Работает с животными</h2>
         <table>
-            <thead>
-            <tr><th>Вид</th><th>Действие</th></tr>
-            </thead>
+            <thead><tr><th>Вид</th><th>Действие</th></tr></thead>
             <tbody>
             <tr th:each="at : ${assignedAnimalTypes}">
                 <td>[[${at.type}]]</td>
                 <td>
-                    <form th:action="@{/zoo/employees/{id}/animal-types/{atypeId}/delete(id=${employee.id},atypeId=${at.id})}"
+                    <form th:action="@{/zoo/employees/{id}/animal-types/{atypeId}/delete(id=${employee.id}, atypeId=${at.id})}"
                           method="post">
                         <button class="btn btn-small">Удалить</button>
                     </form>
@@ -70,19 +109,17 @@
         </table>
     </section>
 
-    <!-- Таблица: доступ к клеткам -->
+    <!-- ───── Доступ к клеткам ───── -->
     <section>
         <h2>Доступ к клеткам</h2>
         <table>
-            <thead>
-            <tr><th>Клетка ID</th><th>Вид животного</th><th>Действие</th></tr>
-            </thead>
+            <thead><tr><th>Клетка ID</th><th>Вид животного</th><th>Действие</th></tr></thead>
             <tbody>
             <tr th:each="c : ${assignedCages}">
                 <td>[[${c.id}]]</td>
                 <td>[[${c.animalTypeName}]]</td>
                 <td>
-                    <form th:action="@{/zoo/employees/{id}/cages/{cageId}/delete(id=${employee.id},cageId=${c.id})}"
+                    <form th:action="@{/zoo/employees/{id}/cages/{cageId}/delete(id=${employee.id}, cageId=${c.id})}"
                           method="post">
                         <button class="btn btn-small">Удалить</button>
                     </form>

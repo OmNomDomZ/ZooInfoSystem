@@ -64,7 +64,7 @@ public class EmployeeService {
         Map<Integer, String> posMap = positionDAO.findAll().stream()
                 .collect(Collectors.toMap(Position::getId, Position::getTitle));
 
-        return EmployeeDTO.builder()
+        EmployeeDTO employeeDTO = EmployeeDTO.builder()
                 .id(e.getId())
                 .fullName(e.getFullName())
                 .gender(e.getGender())
@@ -75,7 +75,39 @@ public class EmployeeService {
                 .salary(e.getSalary())
                 .contactInfo(e.getContactInfo())
                 .specialAttributes(e.getSpecialAttributes())
+
                 .build();
+
+        Employee employeeSpecialInf;
+        switch (posMap.get(e.getPositionId())) {
+            case "ветеринар": {
+                employeeSpecialInf = employeeDAO.getVet(id);
+                employeeDTO.setLicenseNumber(employeeSpecialInf.getLicenseNumber());
+                employeeDTO.setSpecialization(employeeSpecialInf.getSpecialization());
+                break;
+            }
+            case "смотритель": {
+                employeeSpecialInf = employeeDAO.getKeeper(id);
+                employeeDTO.setSection(employeeSpecialInf.getSection());
+                break;
+            }
+            case "уборщик": {
+                employeeSpecialInf = employeeDAO.getJanitor(id);
+                employeeDTO.setCleaningShift(employeeSpecialInf.getCleaningShift());
+                employeeDTO.setArea(employeeSpecialInf.getArea());
+                employeeDTO.setEquipment(employeeSpecialInf.getEquipment());
+                break;
+            }
+            case "администратор": {
+                employeeSpecialInf = employeeDAO.getAdministrator(id);
+                employeeDTO.setDepartment(employeeSpecialInf.getDepartment());
+                employeeDTO.setPhone(employeeSpecialInf.getPhone());
+                break;
+            }
+            default: throw new UnsupportedOperationException("Неизвестный тип должности");
+        }
+
+        return employeeDTO;
     }
 
     @Transactional

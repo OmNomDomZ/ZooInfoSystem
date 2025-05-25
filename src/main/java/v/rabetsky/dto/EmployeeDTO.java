@@ -27,4 +27,19 @@ public class EmployeeDTO {
     private Integer salary;
     private String contactInfo;
     private String specialAttributes;
+    // ветеринар
+    private Long   licenseNumber;
+    private String specialization;
+
+    // смотритель
+    private String section;
+
+    // уборщик
+    private String cleaningShift;
+    private String area;
+    private String equipment;
+
+    // администратор
+    private String department;
+    private String phone;
 }

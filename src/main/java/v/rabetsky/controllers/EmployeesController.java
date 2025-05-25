@@ -1,5 +1,6 @@
 package v.rabetsky.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import v.rabetsky.services.EmployeeService;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/zoo/employees")
 public class EmployeesController {

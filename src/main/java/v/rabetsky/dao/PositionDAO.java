@@ -21,4 +21,10 @@ public class PositionDAO {
                 new BeanPropertyRowMapper<>(Position.class)
         );
     }
+
+    public Position findById(int id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM positions WHERE id = ?",
+                new BeanPropertyRowMapper<>(Position.class), id
+        );
+    }
 }

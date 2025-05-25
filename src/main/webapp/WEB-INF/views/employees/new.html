@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Новый сотрудник</title>
+
     <link rel="stylesheet" th:href="@{/css/employees_style.css}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
           rel="stylesheet"/>
+
+    <!-- небольшой utility-класс -->
+    <style>.hidden{display:none}</style>
 </head>
 <body>
 <header><h1>Новый сотрудник</h1></header>
-<main class="container">
 
-    <form th:action="@{/zoo/employees}" th:object="${employee}" method="post" class="create-form">
+<main class="container">
+    <form th:action="@{/zoo/employees}"
+          th:object="${employee}"
+          method="post"
+          class="create-form">
+
+        <!-- ─────────── базовые поля ─────────── -->
         <div class="form-row">
             <label for="fullName">Полное имя:</label>
             <input type="text" th:field="*{fullName}" id="fullName"/>
@@ -65,12 +74,99 @@
             <div class="error" th:errors="*{contactInfo}"></div>
         </div>
 
+        <!-- ─────────── условные блоки ─────────── -->
+        <!-- 1. Ветеринар -->
+        <div id="vetFields" class="conditional hidden">
+            <div class="form-row">
+                <label for="licenseNumber">Номер лицензии:</label>
+                <input type="number" th:field="*{licenseNumber}" id="licenseNumber"/>
+                <div class="error" th:errors="*{licenseNumber}"></div>
+            </div>
+            <div class="form-row">
+                <label for="specialization">Специализация:</label>
+                <input type="text" th:field="*{specialization}" id="specialization"/>
+                <div class="error" th:errors="*{specialization}"></div>
+            </div>
+        </div>
+
+        <!-- 2. Смотритель -->
+        <div id="keeperFields" class="conditional hidden">
+            <div class="form-row">
+                <label for="section">Сектор:</label>
+                <input type="text" th:field="*{section}" id="section"/>
+                <div class="error" th:errors="*{section}"></div>
+            </div>
+        </div>
+
+        <!-- 3. Уборщик -->
+        <div id="janitorFields" class="conditional hidden">
+            <div class="form-row">
+                <label for="cleaningShift">Смена:</label>
+                <select th:field="*{cleaningShift}" id="cleaningShift">
+                    <option value="" disabled selected>— Выберите —</option>
+                    <option value="день">день</option>
+                    <option value="ночь">ночь</option>
+                </select>
+                <div class="error" th:errors="*{cleaningShift}"></div>
+            </div>
+            <div class="form-row">
+                <label for="area">Участок:</label>
+                <input type="text" th:field="*{area}" id="area"/>
+                <div class="error" th:errors="*{area}"></div>
+            </div>
+            <div class="form-row">
+                <label for="equipment">Инструмент:</label>
+                <input type="text" th:field="*{equipment}" id="equipment"/>
+                <div class="error" th:errors="*{equipment}"></div>
+            </div>
+        </div>
+
+        <!-- 4. Администратор -->
+        <div id="adminFields" class="conditional hidden">
+            <div class="form-row">
+                <label for="department">Отдел:</label>
+                <input type="text" th:field="*{department}" id="department"/>
+                <div class="error" th:errors="*{department}"></div>
+            </div>
+            <div class="form-row">
+                <label for="phone">Внутренний телефон:</label>
+                <input type="text" th:field="*{phone}" id="phone"/>
+                <div class="error" th:errors="*{phone}"></div>
+            </div>
+        </div>
+
+        <!-- ─────────── кнопки ─────────── -->
         <div>
             <button type="submit" class="btn">Создать</button>
             <a th:href="@{/zoo/employees}" class="btn">Отмена</a>
         </div>
     </form>
-
 </main>
+
+<!-- ─────────── JS ─────────── -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const positionSelect = document.getElementById('positionId');
+    const fieldGroups = {
+        'ветеринар'    : document.getElementById('vetFields'),
+        'смотритель'   : document.getElementById('keeperFields'),
+        'уборщик'      : document.getElementById('janitorFields'),
+        'администратор': document.getElementById('adminFields')
+    };
+
+    function updateFields() {
+        const selectedText = positionSelect.options[positionSelect.selectedIndex]?.textContent.trim();
+        // прячем всё
+        Object.values(fieldGroups).forEach(el => el.classList.add('hidden'));
+        // показываем нужное
+        const block = fieldGroups[selectedText];
+        if (block) block.classList.remove('hidden');
+    }
+
+    // при изменении списка и при загрузке
+    positionSelect.addEventListener('change', updateFields);
+    document.addEventListener('DOMContentLoaded', updateFields);
+    /*]]>*/
+</script>
 </body>
 </html>
