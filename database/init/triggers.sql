@@ -11,8 +11,8 @@ begin
     select p.title into pos_title from positions p where p.id = new.position_id;
 
     if pos_title = 'ветеринар' then
-        insert into vets (id, license_number)
-        values (new.id, (random() * 100000000)::int);
+        insert into vets (id)
+        values (new.id);
     elsif pos_title = 'смотритель' then
         insert into keeper (id) values (new.id);
     elsif pos_title = 'уборщик' then

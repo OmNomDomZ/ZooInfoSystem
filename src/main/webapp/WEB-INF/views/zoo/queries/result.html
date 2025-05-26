@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Результат отчёта</title>
+    <link rel="stylesheet" th:href="@{/css/queries_style.css}">
+</head>
+<body>
+<header>
+    <h1 th:text="${title}">Отчёт</h1>
+    <a th:href="@{/zoo/queries}" class="btn">← К списку отчётов</a>
+</header>
+
+<main class="container">
+    <table th:if="${rows != null}">
+        <thead>
+        <tr>
+            <th th:each="col : ${headers}" th:text="${col}">col</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${rows}">
+            <td th:each="cell : ${row}" th:text="${cell}">cell</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${#lists.isEmpty(rows)}" class="empty">
+        Нет данных по заданному отбору.
+    </div>
+</main>
+</body>
+</html>

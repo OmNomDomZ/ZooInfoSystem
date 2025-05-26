@@ -1,0 +1,23 @@
+@import url("/css/employees_style.css");
+
+.report-card{
+    background:#fff;
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,.05);
+    margin-bottom:20px;
+}
+.report-card h2{font-size:1.1em;margin-bottom:10px;color:#2d3a4e}
+.report-card label{display:block;margin:6px 0}
+.report-card input[type=text],
+.report-card input[type=number],
+.report-card input[type=date]{width:260px;padding:6px 8px;border:1px solid #ccc;border-radius:4px}
+.report-card .btn{margin-top:10px}
+
+.empty{
+    background:#fdecea;
+    color:#c0392b;
+    padding:12px;
+    border-radius:6px;
+    text-align:center;
+}

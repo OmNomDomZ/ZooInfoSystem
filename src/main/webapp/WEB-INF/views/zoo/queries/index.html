@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Отчёты</title>
+    <link rel="stylesheet" th:href="@{/css/queries_style.css}">
+</head>
+<body>
+<header><h1>SQL-отчёты</h1></header>
+
+<main class="container">
+
+    <!-- 1. Общий список сотрудников -->
+    <form th:action="@{/zoo/queries/1}" method="get" class="report-card">
+        <h2>1. Сотрудники (общий список)</h2>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 2. Сотрудники по виду -->
+    <form th:action="@{/zoo/queries/2}" method="get" class="report-card">
+        <h2>2. Сотрудники, ответственные за вид</h2>
+        <label>Вид:
+            <input type="text" name="type" placeholder="например: Лев">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 3. Сотрудники с доступом к виду -->
+    <form th:action="@{/zoo/queries/3}" method="get" class="report-card">
+        <h2>3. Сотрудники с доступом к виду</h2>
+        <label>Вид:
+            <input type="text" name="type">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 4. Животные в клетке -->
+    <form th:action="@{/zoo/queries/4}" method="get" class="report-card">
+        <h2>4. Животные в клетке</h2>
+        <label>ID клетки:
+            <input type="number" name="cageId">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 5. Животные, нуждающиеся в тепле -->
+    <form th:action="@{/zoo/queries/5}" method="get" class="report-card">
+        <h2>5. Нуждающиеся в тепле</h2>
+        <label>Вид:
+            <input type="text" name="type">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 6. Животные по прививке -->
+    <form th:action="@{/zoo/queries/6}" method="get" class="report-card">
+        <h2>6. Животные с прививкой</h2>
+        <label>Прививка:
+            <input type="text" name="vaccine">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 7. Совместимые животные -->
+    <form th:action="@{/zoo/queries/7}" method="get" class="report-card">
+        <h2>7. Совместимые по рациону</h2>
+        <label>Вид:
+            <input type="text" name="type">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 8. Поставщики за период -->
+    <form th:action="@{/zoo/queries/8}" method="get" class="report-card">
+        <h2>8. Поставщики кормов (период)</h2>
+        <label>От:
+            <input type="date" name="from">
+        </label>
+        <label>До:
+            <input type="date" name="to">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 9. Внутренние корма -->
+    <form th:action="@{/zoo/queries/9}" method="get" class="report-card">
+        <h2>9. Корма, производимые внутри</h2>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 10. Животные по типу корма -->
+    <form th:action="@{/zoo/queries/10}" method="get" class="report-card">
+        <h2>10. Животные, требующие тип корма</h2>
+        <label>Тип корма:
+            <input type="text" name="foodType">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 11. Полная инфа о животных -->
+    <form th:action="@{/zoo/queries/11}" method="get" class="report-card">
+        <h2>11. Полная инфо о животных</h2>
+        <label>Вид:
+            <input type="text" name="type">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 12. Потенциальные родители -->
+    <form th:action="@{/zoo/queries/12}" method="get" class="report-card">
+        <h2>12. Перспективные родители</h2>
+        <label>Дата начала периода:
+            <input type="date" name="start">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+    <!-- 13. Партнёр-зоопарки -->
+    <form th:action="@{/zoo/queries/13}" method="get" class="report-card">
+        <h2>13. Зоопарки-партнёры</h2>
+        <label>Вид:
+            <input type="text" name="type">
+        </label>
+        <button class="btn">Показать</button>
+    </form>
+
+</main>
+</body>
+</html>
