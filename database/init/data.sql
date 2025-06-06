@@ -211,5 +211,5 @@ values ((select id from animals where nickname = 'Симба'), 1, '2022-05-10')
 
 -- 17. Записи о рождении (потомство)
 insert into birth_records (child_id, parent_id_1, parent_id_2, birth_date, status)
-values (10, 1, 6, '2025-04-30', 'оставлен'),
-       (17, 1, 6, '2024-09-23', 'оставлен');
+values (10, 1, 6, '2025-04-30', 'оставлен');
+       --(17, 1, 6, '2024-09-23', 'оставлен');
